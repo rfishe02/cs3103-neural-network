@@ -23,9 +23,9 @@ public class Test {
       for(Double d : data) {
 
         if(d % 2 == 0) {
-          n.backpropagate(new Random().nextDouble() + 1);
+          n.backpropagate(new Random().nextDouble() + 4);
         } else {
-          n.backpropagate(new Random().nextDouble() + 0);
+          n.backpropagate(new Random().nextDouble() + 2);
         }
 
       }

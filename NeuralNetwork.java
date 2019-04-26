@@ -187,7 +187,7 @@ public class NeuralNetwork {
 
 				for(int w = 0; w < z.getInput().size(); w++) { // For each weight in that neuron
 
-					weight = eta * tmp.get(n) * z.getOutput().get(0); // -eta * delta_l * O_(l-1)
+					weight = eta * tmp.get(n) * z.getOutput().get(0); // -eta * delta_l * O_(l-1) (Output from previous layer is stored in that node)
 					z.getInput().set(w, z.getInput().get(w) + weight);
 
 				}
