@@ -9,7 +9,7 @@ public class Test {
     NeuralNetwork n = new NeuralNetwork();
     n.buildNetwork(8,4,4,8);
 
-    //n.printWeights();
+    n.printWeights();
 
     for(int i = 0; i < 50; i++) {
 
@@ -30,13 +30,10 @@ public class Test {
 
       }
 
-      System.out.println();
-      n.printWeights();
-
     }
 
-    //System.out.println("\nAFTER\n");
-    //n.printWeights();
+    System.out.println("\nAFTER\n");
+    n.printWeights();
 
   }
 
