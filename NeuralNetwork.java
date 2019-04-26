@@ -173,7 +173,6 @@ public class NeuralNetwork {
 		} // End for loop
 
 		// Update the weights
-		// -eta * delta_l * O_(l-1)
 
 		for(int l = 0; l < layers.size(); l++) { // For each layer
 
@@ -185,7 +184,7 @@ public class NeuralNetwork {
 
 				for(int w = 0; w < z.getInput().size(); w++) { // For each weight
 
-					weight = eta * tmp.get(n) * layers.get(l).getNeurons().get(n).getOutput().get(0);
+					weight = eta * tmp.get(n) * z.getOutput().get(0); // -eta * delta_l * O_(l-1)
 					z.getInput().set(w, z.getInput().get(w) + weight);
 
 				}
