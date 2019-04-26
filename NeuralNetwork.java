@@ -12,7 +12,7 @@ public class NeuralNetwork {
 	private int inputLayerCount;
 	private int hiddenLayerCount;
 	private int ouputLayerCount;
-	double eta = -0.125;
+	double eta = -0.0125;
 
 	/** */
 
@@ -77,7 +77,7 @@ public class NeuralNetwork {
 
 					sum = 0;
 
-					for(int w = 0; w < n.getInput().size(); w++) { // For each weight in that layer
+					for(int w = 0; w < n.getInput().size(); w++) { // For each weight in that neuron
 
 						sum += x.get(w) * n.getInput().get(w); // weight_w * input_w
 
@@ -93,7 +93,7 @@ public class NeuralNetwork {
 
 					sum = 0;
 
-					for(int w = 0; w < n.getInput().size(); w++) {
+					for(int w = 0; w < n.getInput().size(); w++) { // For each weight in that neuron
 
 						z = layers.get(l-1).getNeurons().get(w);
 						sum += z.getOutput().get(0) * n.getInput().get(w);
@@ -101,6 +101,7 @@ public class NeuralNetwork {
 					}
 
 					n.getOutput().set(0, activationFunction(sum));
+
 				}
 
 			}
@@ -148,7 +149,9 @@ public class NeuralNetwork {
 
 			} else { // It's the other layers
 
-				for(int n = 0; n < layers.get(l).getNeuronCount(); n++) { // For each neuron
+				// Calculate O_j (1- O_j) Summation delta_k W_jk
+
+				for(int n = 0; n < layers.get(l).getNeuronCount(); n++) { // For each neuron in that layer
 
 					z = layers.get(l).getNeurons().get(n);
 					output = z.getOutput().get(0);
@@ -156,9 +159,9 @@ public class NeuralNetwork {
 
 					sum = 0;
 
-					for(int k = 0; k < delta.peek().size(); k++) { // The summation of delta k
+					for(int k = 0; k < delta.peek().size(); k++) { // For each k
 
-						sum += delta.peek().get(k) * z.getInput().get(k); // Calculate delta_j = O_j (1-O_j) * Summation delta_k * W_jk for hidden
+						sum += delta.peek().get(k) * layers.get(l+1).getNeurons().get(k).getInput().get(n); // delta_k * W_j+1 k
 
 					}
 
@@ -182,7 +185,7 @@ public class NeuralNetwork {
 
 				z = layers.get(l).getNeurons().get(n);
 
-				for(int w = 0; w < z.getInput().size(); w++) { // For each weight
+				for(int w = 0; w < z.getInput().size(); w++) { // For each weight in that neuron
 
 					weight = eta * tmp.get(n) * z.getOutput().get(0); // -eta * delta_l * O_(l-1)
 					z.getInput().set(w, z.getInput().get(w) + weight);
@@ -212,7 +215,6 @@ public class NeuralNetwork {
 					System.out.printf("%4.2f ",w);
 
 				}
-
 				System.out.println();
 
 			}
