@@ -6,16 +6,20 @@ public class Test {
 
   public static void main(String[] args) {
 
-    NeuralNetwork n = new NeuralNetwork();
-    n.buildNetwork(8,4,4,8);
+    int input = 64;
+    int output = 3;
+    int hidden = 8;
+    int width = 4;
 
+    NeuralNetwork n = new NeuralNetwork();
+    n.buildNetwork(input,hidden,width,output);
     n.printWeights();
 
     for(int i = 0; i < 50; i++) {
 
-      ArrayList<Double> data = new ArrayList<>(8);
+      ArrayList<Double> data = new ArrayList<>(input);
 
-      for(int j = 0; j < 8; j++) {
+      for(int j = 0; j < input; j++) {
         data.add(new Random().nextDouble() + 1);
       }
       n.forwardPass(data);

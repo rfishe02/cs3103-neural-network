@@ -20,6 +20,10 @@ public class NeuralNetwork {
 
 		Layer h;
 
+		input++;
+		hidden++;
+		output++;
+
 		// Set up the layers.
 		// The input layer represents a separate input vector.
 		// The ouput layer is the last layer of the ArrayList.
