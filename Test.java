@@ -16,8 +16,8 @@ public class Test {
 
     int input = 56;
     int output =3;
-    int hidden =14;
-    int width = 7;
+    int hidden =20;
+    int width = 3;
 
     NeuralNetwork n = new NeuralNetwork();
     n.buildNetwork(input,hidden,width,output);
@@ -27,30 +27,27 @@ public class Test {
     xTarget.add(0.0);
     xTarget.add(0.0);
 
-    for(int i = 0; i < 50; i++) {
-      n.forwardPass(x);
-      n.backpropagate(x,xTarget); // 1 for x, 2 for y, 3 for z
-    }
-
     ArrayList<Double> yTarget = new ArrayList<>(3);
     yTarget.add(0.0);
     yTarget.add(1.0);
     yTarget.add(0.0);
-
-    for(int i = 0; i < 50; i++) {
-      n.forwardPass(x2);
-      n.backpropagate(x2,yTarget); // 1 for x, 2 for y, 3 for z
-    }
 
     ArrayList<Double> zTarget = new ArrayList<>(3);
     zTarget.add(0.0);
     zTarget.add(0.0);
     zTarget.add(1.0);
 
-    for(int i = 0; i < 50; i++) {
+    for(int i = 0; i < 30; i++) {
+      n.forwardPass(x);
+      n.backpropagate(x,xTarget); // 1 for x, 2 for y, 3 for z
+
+      n.forwardPass(x2);
+      n.backpropagate(x2,yTarget); // 1 for x, 2 for y, 3 for z
+
       n.forwardPass(x3);
       n.backpropagate(x3,zTarget); // 1 for x, 2 for y, 3 for z
-    }
+
+    } // The accuracy is higher when trained one after the other, as opposed to separately
 
     n.forwardPass(x);
     n.printOutput(n.getLayers().size()-1);
@@ -105,7 +102,8 @@ public class Test {
           if(Character.compare(read.charAt(i),'.') == 0) {
             output.add(0.0);
           } else {
-            output.add(2.0);
+            output.add(1.0);
+            //output.add((double)read.charAt(i));
           }
 
         }
