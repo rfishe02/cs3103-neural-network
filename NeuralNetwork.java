@@ -12,7 +12,7 @@ public class NeuralNetwork {
 	private int inputLayerCount;
 	private int hiddenLayerCount;
 	private int ouputLayerCount;
-	double eta = -0.05;
+	double eta = -0.20;
 
 	public ArrayList<Layer> getLayers() {
 		return layers;
@@ -186,7 +186,6 @@ public class NeuralNetwork {
 					if(l == 0) {
 
 						weight = eta * tmp.get(n) * input.get(w); // -eta * delta_l * x_i-1
-
 
 					} else {
 

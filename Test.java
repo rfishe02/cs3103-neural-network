@@ -27,7 +27,7 @@ public class Test {
     xTarget.add(0.0);
     xTarget.add(0.0);
 
-    for(int i = 0; i < 10; i++) {
+    for(int i = 0; i < 50; i++) {
       n.forwardPass(x);
       n.backpropagate(x,xTarget); // 1 for x, 2 for y, 3 for z
     }
@@ -37,7 +37,7 @@ public class Test {
     yTarget.add(1.0);
     yTarget.add(0.0);
 
-    for(int i = 0; i < 10; i++) {
+    for(int i = 0; i < 50; i++) {
       n.forwardPass(x2);
       n.backpropagate(x2,yTarget); // 1 for x, 2 for y, 3 for z
     }
@@ -47,7 +47,7 @@ public class Test {
     zTarget.add(0.0);
     zTarget.add(1.0);
 
-    for(int i = 0; i < 10; i++) {
+    for(int i = 0; i < 50; i++) {
       n.forwardPass(x3);
       n.backpropagate(x3,zTarget); // 1 for x, 2 for y, 3 for z
     }
@@ -58,6 +58,11 @@ public class Test {
 
     n.forwardPass(x2);
     n.printOutput(n.getLayers().size()-1);
+    System.out.println();
+
+    n.forwardPass(x3);
+    n.printOutput(n.getLayers().size()-1);
+    System.out.println();
 
 
     /////////////////////
@@ -100,7 +105,7 @@ public class Test {
           if(Character.compare(read.charAt(i),'.') == 0) {
             output.add(0.0);
           } else {
-            output.add(1.0);
+            output.add(2.0);
           }
 
         }
