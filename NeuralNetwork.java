@@ -12,7 +12,7 @@ public class NeuralNetwork {
 	private int inputLayerCount;
 	private int hiddenLayerCount;
 	private int ouputLayerCount;
-	double eta = -0.40;
+	double eta = -0.35;
 
 	public ArrayList<Layer> getLayers() {
 		return layers;
@@ -28,7 +28,7 @@ public class NeuralNetwork {
 		return activationFunction(value) * (1 - activationFunction(value));
 	}
 
-	public double error(double output, double target) {
+	public double error(double target, double output) {
 		return target - output;
 	}
 
@@ -140,28 +140,25 @@ public class NeuralNetwork {
 
 			for(int n = 0; n < layers.get(l).getNeuronCount(); n++) { // For each neuron in that layer
 
+				z = layers.get(l).getNeurons().get(n);
+				output = z.getOutput().get(0);
+				d = output * (1-output);
+
 				if(l == layers.size() - 1) { // If it's the last layer
 
-					z = layers.get(l).getNeurons().get(n);
-					output = z.getOutput().get(0);
-					d = output * (1 - output) * error(output,target.get(n)); // Calculate delta_k = O_k (1 - O_k) (O_k - t_k) for output
-					tmp.add(d);
+					tmp.add(d * error(target.get(n),output)); // Calculate delta_k = O_k (1 - O_k) (O_k - t_k) for output
 
 				} else { // It's in the other layers.
-
-					z = layers.get(l).getNeurons().get(n);
-					output = z.getOutput().get(0);
-					d = output * (1-output);
 
 					sum = 0;
 
 					for(int k = 0; k < delta.peek().size(); k++) { // For each k
 
-						sum += delta.peek().get(k) * layers.get(l+1).getNeurons().get(k).getInput().get(n); // Calculate O_j (1- O_j) Summation delta_k * W_j+1 k
+						sum += delta.peek().get(k) * layers.get(l+1).getNeurons().get(k).getInput().get(n);
 
 					}
 
-					tmp.add(sum);
+					tmp.add(d * sum); // Calculate O_j (1- O_j) Summation delta_k * W_j+1 k
 
 				}
 

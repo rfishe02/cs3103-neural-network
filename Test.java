@@ -9,49 +9,45 @@ public class Test {
 
   public static void main(String[] args) {
 
-
     ArrayList<Double> x = getInput("x1.txt",56);
     ArrayList<Double> x2 = getInput("y1.txt",56);
     ArrayList<Double> x3 = getInput("z1.txt",56);
 
     int input = 56;
     int output =3;
-    int hidden =20;
+    int hidden =15;
     int width = 3;
 
     NeuralNetwork n = new NeuralNetwork();
     n.buildNetwork(input,hidden,width,output);
 
     ArrayList<Double> xTarget = new ArrayList<>(3);
-    xTarget.add(1.0);
+    xTarget.add(2.0);
     xTarget.add(0.0);
     xTarget.add(0.0);
 
     ArrayList<Double> yTarget = new ArrayList<>(3);
     yTarget.add(0.0);
-    yTarget.add(1.0);
+    yTarget.add(2.0);
     yTarget.add(0.0);
 
     ArrayList<Double> zTarget = new ArrayList<>(3);
     zTarget.add(0.0);
     zTarget.add(0.0);
-    zTarget.add(1.0);
+    zTarget.add(2.0);
 
      // The accuracy is higher when trained one after the other, as opposed to separately
      // It also worked better with more forward passes
 
-    for(int i = 0; i < 30; i++) {
-      n.forwardPass(x);
-      n.forwardPass(x);
-      n.backpropagate(x,xTarget); // 1 for x, 2 for y, 3 for z
+      for(int i = 0; i < 5000; i++) {
+        n.forwardPass(x);
+        n.backpropagate(x,xTarget);
 
-      n.forwardPass(x2);
-      n.forwardPass(x2);
-      n.backpropagate(x2,yTarget); // 1 for x, 2 for y, 3 for z
+        n.forwardPass(x2);
+        n.backpropagate(x2,yTarget);
 
-      n.forwardPass(x3);
-      n.forwardPass(x3);
-      n.backpropagate(x3,zTarget); // 1 for x, 2 for y, 3 for z
+        n.forwardPass(x3);
+        n.backpropagate(x3,zTarget);
 
     }
 
