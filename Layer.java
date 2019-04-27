@@ -31,7 +31,7 @@ public class Layer {
 		ArrayList<Neuron> neurons = new ArrayList<>();
 		Neuron n;
 
-		for(int a = 0; a < neuronCount; a++ ) {
+		for(int a = 0; a < neuronCount-1; a++ ) {
 
 			n = new Neuron();
 
@@ -42,6 +42,17 @@ public class Layer {
 			neurons.add(n);
 
 		}
+
+		////////////////////////////////////
+		// Create the bias neuron.
+
+		n = new Neuron();
+		n.setOutput(new ArrayList<Double>(1));
+		n.getOutput().add(1.0);
+
+		neurons.add(n);
+
+		////////////////////////////////////
 
 		this.neurons = neurons;
 

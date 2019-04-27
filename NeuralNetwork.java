@@ -20,9 +20,11 @@ public class NeuralNetwork {
 
 		Layer h;
 
+		////////////////////////////////////
 		input++;
 		hidden++;
 		output++;
+		////////////////////////////////////
 
 		// Set up the layers.
 		// The input layer represents a separate input vector.
@@ -81,9 +83,13 @@ public class NeuralNetwork {
 
 					sum = 0;
 
-					for(int w = 0; w < n.getInput().size(); w++) { // For each weight in that neuron
+					if(n.getInput() != null) { // Skip the bias node, which doesn't have input weights.
 
-						sum += x.get(w) * n.getInput().get(w); // weight_w * input_w
+						for(int w = 0; w < n.getInput().size(); w++) { // For each weight in that neuron
+
+							sum += x.get(w) * n.getInput().get(w); // weight_w * input_w
+
+						}
 
 					}
 
@@ -97,10 +103,14 @@ public class NeuralNetwork {
 
 					sum = 0;
 
-					for(int w = 0; w < n.getInput().size(); w++) { // For each weight in that neuron
+					if(n.getInput() != null) {  // Skip the bias node, which doesn't have input weights.
 
-						z = layers.get(l-1).getNeurons().get(w);
-						sum += z.getOutput().get(0) * n.getInput().get(w);
+						for(int w = 0; w < n.getInput().size(); w++) { // For each weight in that neuron
+
+							z = layers.get(l-1).getNeurons().get(w);
+							sum += z.getOutput().get(0) * n.getInput().get(w);
+
+						}
 
 					}
 
@@ -165,7 +175,9 @@ public class NeuralNetwork {
 
 					for(int k = 0; k < delta.peek().size(); k++) { // For each k
 
-						sum += delta.peek().get(k) * layers.get(l+1).getNeurons().get(k).getInput().get(n); // delta_k * W_j+1 k
+						if(layers.get(l+1).getNeurons().get(k).getInput() != null) {  // Skip the bias node
+							sum += delta.peek().get(k) * layers.get(l+1).getNeurons().get(k).getInput().get(n); // delta_k * W_j+1 k
+						}
 
 					}
 
@@ -189,10 +201,14 @@ public class NeuralNetwork {
 
 				z = layers.get(l).getNeurons().get(n);
 
-				for(int w = 0; w < z.getInput().size(); w++) { // For each weight in that neuron
+				if(z.getInput() != null) {  // Skip the bias node
 
-					weight = eta * tmp.get(n) * z.getOutput().get(0); // -eta * delta_l * O_(l-1) (Output from previous layer is stored in that node)
-					z.getInput().set(w, z.getInput().get(w) + weight);
+					for(int w = 0; w < z.getInput().size(); w++) { // For each weight in that neuron
+
+						weight = eta * tmp.get(n) * z.getOutput().get(0); // -eta * delta_l * O_(l-1) (Output from previous layer is stored in that node)
+						z.getInput().set(w, z.getInput().get(w) + weight);
+
+					}
 
 				}
 
@@ -214,12 +230,15 @@ public class NeuralNetwork {
 
 			for(Neuron n : l.getNeurons()) {
 
-				for(Double w : n.getInput()) {
+				if(n.getInput() != null) {
 
-					System.out.printf("%4.2f ",w);
+					for(Double w : n.getInput()) {
 
+						System.out.printf("%4.2f ",w);
+
+					}
+					System.out.println();
 				}
-				System.out.println();
 
 			}
 			System.out.println();

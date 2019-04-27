@@ -17,9 +17,9 @@ public class Test {
 
     for(int i = 0; i < 50; i++) {
 
-      ArrayList<Double> data = new ArrayList<>(input);
+      ArrayList<Double> data = new ArrayList<>(input+1);
 
-      for(int j = 0; j < input; j++) {
+      for(int j = 0; j < input+1; j++) {
         data.add(new Random().nextDouble() + 1);
       }
       n.forwardPass(data);
