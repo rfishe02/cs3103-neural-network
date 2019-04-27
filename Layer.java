@@ -26,6 +26,8 @@ public class Layer {
 		return neuronCount;
 	}
 
+ 	/** Create a layer with the given number of neurons, that will have input and output weights */
+
 	public void makeLayers(int prev, int next) {
 
 		ArrayList<Neuron> neurons = new ArrayList<>();

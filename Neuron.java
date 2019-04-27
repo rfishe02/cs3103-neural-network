@@ -11,19 +11,7 @@ public class Neuron {
 
 	}
 
-	public ArrayList<Double> genWeights(int size) {
-
-		ArrayList<Double> weights = new ArrayList<>(size);
-
-		for(int i = 0; i < size; i++) {
-			weights.add(new Random().nextDouble());
-		}
-
-		return weights;
-
-	}
-
-	/* Setters & Getters */
+	// Setters & Getters
 
 	public void setInput(ArrayList<Double> weights) {
 		this.in = weights;
@@ -39,6 +27,20 @@ public class Neuron {
 
 	public ArrayList<Double> getOutput() {
 		return out;
+	}
+
+	/** Generate random input weights for the neuron in that layer. */
+
+	public ArrayList<Double> genWeights(int size) {
+
+		ArrayList<Double> weights = new ArrayList<>(size);
+
+		for(int i = 0; i < size; i++) {
+			weights.add(new Random().nextDouble());
+		}
+
+		return weights;
+
 	}
 
 }

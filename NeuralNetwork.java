@@ -12,7 +12,11 @@ public class NeuralNetwork {
 	private int inputLayerCount;
 	private int hiddenLayerCount;
 	private int ouputLayerCount;
-	double eta = -0.33;
+	double eta = -0.05;
+
+	public ArrayList<Layer> getLayers() {
+		return layers;
+	}
 
 	/** */
 
@@ -89,12 +93,11 @@ public class NeuralNetwork {
 
 					for(int w = 0; w < layers.get(l).getNeurons().get(n).getInput().size(); w++) { // For each weight in that neuron
 
-						sum += x.get(w) * layers.get(l).getNeurons().get(n).getInput().get(w); // weight_w * input_w
+						sum += (x.get(w) * layers.get(l).getNeurons().get(n).getInput().get(w)); //  input_w * weight_w
 
 					}
 
 					sum += 1 * bias.get(l).getNeurons().get(0).getInput().get(n); // Add the bias to each node ouput
-
 					layers.get(l).getNeurons().get(n).getOutput().set(0, activationFunction(sum));
 
 				}
@@ -133,9 +136,13 @@ public class NeuralNetwork {
 		return activationFunction(value) * (1 - activationFunction(value));
 	}
 
+	public double error(double output, double target) {
+		return target - output;
+	}
+
 	// =======================================================
 
-	public void backpropagate(ArrayList<Double> target) {
+	public void backpropagate(ArrayList<Double> input, ArrayList<Double> target) {
 
 		Stack<ArrayList<Double>> delta = new Stack<ArrayList<Double>>();
 		ArrayList<Double> tmp;
@@ -156,14 +163,12 @@ public class NeuralNetwork {
 
 					z = layers.get(l).getNeurons().get(n);
 					output = z.getOutput().get(0);
-					d = output * (1 - output) * (output - target.get(n)); // Calculate delta_k = O_k (1 - O_k) (O_k - t_k) for output
+					d = output * (1 - output) * error(output,target.get(n)); // Calculate delta_k = O_k (1 - O_k) (O_k - t_k) for output
 					tmp.add(d);
 
 				} // End for loop
 
-			} else { // It's the other layers
-
-				// Calculate O_j (1- O_j) Summation delta_k W_jk
+			} else { // It's the other layers // Calculate O_j (1- O_j) Summation delta_k W_jk
 
 				for(int n = 0; n < layers.get(l).getNeuronCount(); n++) { // For each neuron in that layer
 
@@ -195,30 +200,33 @@ public class NeuralNetwork {
 
 			tmp = delta.pop();
 
-			for(int n = 0; n < layers.get(l).getNeuronCount(); n++) { // For each neuron
+			if(l == 0) {
 
-				z = layers.get(l).getNeurons().get(n);
+				for(int n = 0; n < layers.get(l).getNeuronCount()-1; n++) { // For each neuron
 
-				for(int w = 0; w < z.getInput().size(); w++) { // For each weight in that neuron
+					z = layers.get(l).getNeurons().get(n);
 
-					weight = eta * tmp.get(n) * z.getOutput().get(0); // -eta * delta_l * O_(l-1) (Output from previous layer is stored in that node)
-					z.getInput().set(w, z.getInput().get(w) + weight);
+					for(int w = 0; w < z.getInput().size(); w++) { // For each weight in that neuron
+
+						weight = eta * tmp.get(n) * input.get(w); // -eta * delta_l * O_(l-1) //
+						z.getInput().set(w, z.getInput().get(w) + weight);
+
+					}
+
+					b = bias.get(l).getNeurons().get(0); // Update bias
+					b.getInput().set(n,b.getInput().get(n) + (eta*tmp.get(n)));
 
 				}
 
-				b = bias.get(l).getNeurons().get(0); // Update bias
-				b.getInput().set(n,b.getInput().get(n) + (eta*tmp.get(n)));
+			} else {
+
 
 			}
 
+
+
 		} // End for loop
 
-	}
-
-	/////////////////////////
-
-	public ArrayList<Layer> getLayers() {
-		return layers;
 	}
 
 	public void printWeights() {
@@ -240,11 +248,11 @@ public class NeuralNetwork {
 		}
 	}
 
-	public void printOutput() {
+	public void printOutput(int layer) {
 
-		for(Neuron n : layers.get(layers.size()-1).getNeurons()) {
+		for(Neuron n : layers.get(layer).getNeurons()) {
 
-			System.out.println(n.getOutput().get(0));
+			System.out.printf("%4.4f\n",n.getOutput().get(0));
 
 		}
 
