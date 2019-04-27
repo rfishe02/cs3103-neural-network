@@ -29,7 +29,7 @@ public class Test {
 
     for(int i = 0; i < 10; i++) {
       n.forwardPass(x);
-      n.backpropagate(xTarget); // 1 for x, 2 for y, 3 for z
+      n.backpropagate(x,xTarget); // 1 for x, 2 for y, 3 for z
     }
 
     ArrayList<Double> yTarget = new ArrayList<>(3);
@@ -39,7 +39,7 @@ public class Test {
 
     for(int i = 0; i < 10; i++) {
       n.forwardPass(x2);
-      n.backpropagate(yTarget); // 1 for x, 2 for y, 3 for z
+      n.backpropagate(x2,yTarget); // 1 for x, 2 for y, 3 for z
     }
 
     ArrayList<Double> zTarget = new ArrayList<>(3);
@@ -49,7 +49,7 @@ public class Test {
 
     for(int i = 0; i < 10; i++) {
       n.forwardPass(x3);
-      n.backpropagate(zTarget); // 1 for x, 2 for y, 3 for z
+      n.backpropagate(x3,zTarget); // 1 for x, 2 for y, 3 for z
     }
 
     n.forwardPass(x);
