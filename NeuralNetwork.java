@@ -12,7 +12,7 @@ public class NeuralNetwork {
 	private int inputLayerCount;
 	private int hiddenLayerCount;
 	private int ouputLayerCount;
-	double eta = -0.30;
+	double eta = -0.40;
 
 	public ArrayList<Layer> getLayers() {
 		return layers;
