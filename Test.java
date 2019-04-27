@@ -37,7 +37,7 @@ public class Test {
     zTarget.add(0.0);
     zTarget.add(1.0);
 
-    for(int i = 0; i < 30; i++) {
+    for(int i = 0; i < 50; i++) {
       n.forwardPass(x);
       n.backpropagate(x,xTarget); // 1 for x, 2 for y, 3 for z
 
