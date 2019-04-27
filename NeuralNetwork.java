@@ -7,24 +7,19 @@ import java.util.Stack;
 
 public class NeuralNetwork {
 
-	//private Layer outputLayer;
+	private ArrayList<Layer> bias;
 	private ArrayList<Layer> layers;
 	private int inputLayerCount;
 	private int hiddenLayerCount;
 	private int ouputLayerCount;
-	double eta = -0.0125;
+	double eta = -0.33;
 
 	/** */
 
 	public void buildNetwork(int input, int hidden, int width, int output) {
 
+		Layer b;
 		Layer h;
-
-		////////////////////////////////////
-		input++;
-		hidden++;
-		output++;
-		////////////////////////////////////
 
 		// Set up the layers.
 		// The input layer represents a separate input vector.
@@ -33,29 +28,38 @@ public class NeuralNetwork {
 		// Make hidden layers.
 		// Each node in the hidden layer has input weights, and an output.
 
+		ArrayList<Layer> bLayers = new ArrayList<>(width);
 		ArrayList<Layer> layers = new ArrayList<>(width);
 
 		for (int i = 0; i < width; i++) {
+
+			b = new Layer();
 			h = new Layer();
 
 			if (i == 0) {
 				h.setNeuronCount(hidden);
-				h.makeLayers(input,hidden);
+				h.makeLayers(input,1);
 
 			} else if (i == width-1) {
 				h.setNeuronCount(output);
-				h.makeLayers(hidden,output);
+				h.makeLayers(hidden,1);
 
 			}
 			else {
 				h.setNeuronCount(hidden);
-				h.makeLayers(hidden,hidden);
+				h.makeLayers(hidden,1);
 
 			}
 
+			b.setNeuronCount(1);
+			b.makeLayers(hidden,1);  // Fix?
+
+			bLayers.add(b);
 			layers.add(h);
+
 		}
 
+		this.bias = bLayers;
 		this.layers = layers;
 
 		// Store layer counts.
@@ -79,42 +83,37 @@ public class NeuralNetwork {
 
 			if (l == 0) { // If it's the first hidden layer
 
-				for (Neuron n : layers.get(l).getNeurons()) { // For each neuron in the first hidden layer
+				for(int n = 0; n < layers.get(l).getNeurons().size(); n++) { // For all neurons in that layer
 
 					sum = 0;
 
-					if(n.getInput() != null) { // Skip the bias node, which doesn't have input weights.
+					for(int w = 0; w < layers.get(l).getNeurons().get(n).getInput().size(); w++) { // For each weight in that neuron
 
-						for(int w = 0; w < n.getInput().size(); w++) { // For each weight in that neuron
-
-							sum += x.get(w) * n.getInput().get(w); // weight_w * input_w
-
-						}
+						sum += x.get(w) * layers.get(l).getNeurons().get(n).getInput().get(w); // weight_w * input_w
 
 					}
 
-					n.getOutput().set(0, activationFunction(sum));
+					sum += 1 * bias.get(l).getNeurons().get(0).getInput().get(n); // Add the bias to each node ouput
+
+					layers.get(l).getNeurons().get(n).getOutput().set(0, activationFunction(sum));
 
 				}
 
 			} else { // It's in the other layers
 
-				for (Neuron n : layers.get(l).getNeurons()) { // For each neuron in that layer
+				for(int n = 0; n < layers.get(l).getNeurons().size(); n++) {
 
 					sum = 0;
 
-					if(n.getInput() != null) {  // Skip the bias node, which doesn't have input weights.
+					for(int w = 0; w < layers.get(l).getNeurons().get(n).getInput().size(); w++) {
 
-						for(int w = 0; w < n.getInput().size(); w++) { // For each weight in that neuron
-
-							z = layers.get(l-1).getNeurons().get(w);
-							sum += z.getOutput().get(0) * n.getInput().get(w);
-
-						}
+						z = layers.get(l-1).getNeurons().get(w);
+						sum += z.getOutput().get(0) * layers.get(l).getNeurons().get(n).getInput().get(w);
 
 					}
 
-					n.getOutput().set(0, activationFunction(sum));
+					sum += 1 * bias.get(l).getNeurons().get(0).getInput().get(n); // Add the bias to each node ouput
+					layers.get(l).getNeurons().get(n).getOutput().set(0, activationFunction(sum));
 
 				}
 
@@ -136,10 +135,11 @@ public class NeuralNetwork {
 
 	// =======================================================
 
-	public void backpropagate(double target) {
+	public void backpropagate(ArrayList<Double> target) {
 
 		Stack<ArrayList<Double>> delta = new Stack<ArrayList<Double>>();
 		ArrayList<Double> tmp;
+		Neuron b;
 		Neuron z;
 		double d;
 		double output;
@@ -156,7 +156,7 @@ public class NeuralNetwork {
 
 					z = layers.get(l).getNeurons().get(n);
 					output = z.getOutput().get(0);
-					d = output * (1 - output) * (output - target); // Calculate delta_k = O_k (1 - O_k) (O_k - t_k) for output
+					d = output * (1 - output) * (output - target.get(n)); // Calculate delta_k = O_k (1 - O_k) (O_k - t_k) for output
 					tmp.add(d);
 
 				} // End for loop
@@ -175,9 +175,7 @@ public class NeuralNetwork {
 
 					for(int k = 0; k < delta.peek().size(); k++) { // For each k
 
-						if(layers.get(l+1).getNeurons().get(k).getInput() != null) {  // Skip the bias node
-							sum += delta.peek().get(k) * layers.get(l+1).getNeurons().get(k).getInput().get(n); // delta_k * W_j+1 k
-						}
+						sum += delta.peek().get(k) * layers.get(l+1).getNeurons().get(k).getInput().get(n); // delta_k * W_j+1 k
 
 					}
 
@@ -201,16 +199,15 @@ public class NeuralNetwork {
 
 				z = layers.get(l).getNeurons().get(n);
 
-				if(z.getInput() != null) {  // Skip the bias node
+				for(int w = 0; w < z.getInput().size(); w++) { // For each weight in that neuron
 
-					for(int w = 0; w < z.getInput().size(); w++) { // For each weight in that neuron
-
-						weight = eta * tmp.get(n) * z.getOutput().get(0); // -eta * delta_l * O_(l-1) (Output from previous layer is stored in that node)
-						z.getInput().set(w, z.getInput().get(w) + weight);
-
-					}
+					weight = eta * tmp.get(n) * z.getOutput().get(0); // -eta * delta_l * O_(l-1) (Output from previous layer is stored in that node)
+					z.getInput().set(w, z.getInput().get(w) + weight);
 
 				}
+
+				b = bias.get(l).getNeurons().get(0); // Update bias
+				b.getInput().set(n,b.getInput().get(n) + (eta*tmp.get(n)));
 
 			}
 
@@ -230,20 +227,27 @@ public class NeuralNetwork {
 
 			for(Neuron n : l.getNeurons()) {
 
-				if(n.getInput() != null) {
+				for(Double w : n.getInput()) {
 
-					for(Double w : n.getInput()) {
+					System.out.printf("%4.2f ",w);
 
-						System.out.printf("%4.2f ",w);
-
-					}
-					System.out.println();
 				}
+				System.out.println();
 
 			}
 			System.out.println();
 
 		}
+	}
+
+	public void printOutput() {
+
+		for(Neuron n : layers.get(layers.size()-1).getNeurons()) {
+
+			System.out.println(n.getOutput().get(0));
+
+		}
+
 	}
 
 }

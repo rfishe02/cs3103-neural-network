@@ -16,7 +16,7 @@ public class Neuron {
 		ArrayList<Double> weights = new ArrayList<>(size);
 
 		for(int i = 0; i < size; i++) {
-			weights.add(i, new Random().nextDouble());
+			weights.add(new Random().nextDouble());
 		}
 
 		return weights;
