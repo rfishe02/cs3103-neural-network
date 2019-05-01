@@ -15,8 +15,8 @@ public class Test {
 
     int input = 56;
     int output =3;
-    int hidden =25;
-    int width = 3;
+    int hidden =30;
+    int width = 7;
 
     NeuralNetwork n = new NeuralNetwork();
     n.buildNetwork(input,hidden,width,output);
@@ -27,44 +27,44 @@ public class Test {
     xTarget.add(1.0);
 
     ArrayList<Double> yTarget = new ArrayList<>(3);
-    yTarget.add(0.0);
     yTarget.add(1.0);
     yTarget.add(0.0);
+    yTarget.add(1.0);
 
     ArrayList<Double> zTarget = new ArrayList<>(3);
-    zTarget.add(0.0);
-    zTarget.add(0.0);
     zTarget.add(1.0);
+    zTarget.add(1.0);
+    zTarget.add(0.0);
 
      // The accuracy is higher when trained one after the other, as opposed to separately
      // It also worked better with more forward passes
 
      //n.printWeights();
 
-      for(int i = 0; i < 2000; i++) {
+      for(int i = 0; i < 5000; i++) {
         n.forwardPass(x);
         n.backpropagate(x,xTarget);
 
-        //n.forwardPass(x2);
-        //n.backpropagate(x2,yTarget);
+        n.forwardPass(x2);
+        n.backpropagate(x2,yTarget);
 
-        //n.forwardPass(x3);
-        //n.backpropagate(x3,zTarget);
+        n.forwardPass(x3);
+        n.backpropagate(x3,zTarget);
 
     }
 
 
     n.forwardPass(x);
-    n.printOutput();
+    n.printLastOutput();
     System.out.println();
 
-    //n.forwardPass(x2);
-    //n.printOutput();
-    //System.out.println();
+    n.forwardPass(x2);
+    n.printLastOutput();
+    System.out.println();
 
-    //n.forwardPass(x3);
-    //n.printOutput();
-    //System.out.println();
+    n.forwardPass(x3);
+    n.printLastOutput();
+    System.out.println();
 
 
     //System.out.println();

@@ -145,8 +145,6 @@ public class NeuralNetwork {
 				z = layers.get(l).getNeurons().get(j);
 				d = activationFunctionDerivative(z.getA());
 
-				//System.out.println(d);
-
 				if(l == layers.size() - 1) { // If it's the last layer (output)
 
 					tmp.add(d * error(target.get(j),z.getA())); // Calculate delta_k = O_k (1 - O_k) (O_k - t_k) for output
@@ -187,14 +185,12 @@ public class NeuralNetwork {
 						change = layers.get(l-1).getNeurons().get(i).getA() * tmp.get(j);
 					}
 
-					//change = z.getA() * tmp.get(j);
-
 					z.getW().set(i, z.getW().get(i) + (eta * change));
 
 				}
 
 				b = bias.get(l).getNeurons().get(0); // Update bias
-				b.getW().set(j,b.getW().get(j) + (eta*tmp.get(j)));
+				b.getW().set(j, b.getW().get(j) + (eta * tmp.get(j) ));
 
 			}
 
@@ -227,7 +223,7 @@ public class NeuralNetwork {
 		}
 	}
 
-	/** Print the output of a given layer. */
+	/** Print the output all layers. */
 
 	public void printOutput() {
 
@@ -243,6 +239,19 @@ public class NeuralNetwork {
 			System.out.println();
 
 		}
+
+	}
+
+	public void printLastOutput() {
+
+		Neuron z;
+
+		for(int n = 0; n < layers.get(layers.size()-1).getNeurons().size(); n++) {
+			z = layers.get(layers.size()-1).getNeurons().get(n);
+
+			System.out.printf("%4.3f %4.3f\n",z.getIn(),z.getA());
+		}
+		System.out.println();
 
 	}
 
