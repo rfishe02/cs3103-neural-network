@@ -22,9 +22,9 @@ public class Test {
     n.buildNetwork(input,hidden,width,output);
 
     ArrayList<Double> xTarget = new ArrayList<>(3);
+    xTarget.add(0.0);
     xTarget.add(1.0);
-    xTarget.add(0.0);
-    xTarget.add(0.0);
+    xTarget.add(1.0);
 
     ArrayList<Double> yTarget = new ArrayList<>(3);
     yTarget.add(0.0);
@@ -39,29 +39,36 @@ public class Test {
      // The accuracy is higher when trained one after the other, as opposed to separately
      // It also worked better with more forward passes
 
-      for(int i = 0; i < 3000; i++) {
+     //n.printWeights();
+
+      for(int i = 0; i < 2000; i++) {
         n.forwardPass(x);
         n.backpropagate(x,xTarget);
 
-        n.forwardPass(x2);
-        n.backpropagate(x2,yTarget);
+        //n.forwardPass(x2);
+        //n.backpropagate(x2,yTarget);
 
-        n.forwardPass(x3);
-        n.backpropagate(x3,zTarget);
+        //n.forwardPass(x3);
+        //n.backpropagate(x3,zTarget);
 
     }
 
+
     n.forwardPass(x);
-    n.printOutput(n.getLayers().size()-1);
+    n.printOutput();
     System.out.println();
 
-    n.forwardPass(x2);
-    n.printOutput(n.getLayers().size()-1);
-    System.out.println();
+    //n.forwardPass(x2);
+    //n.printOutput();
+    //System.out.println();
 
-    n.forwardPass(x3);
-    n.printOutput(n.getLayers().size()-1);
-    System.out.println();
+    //n.forwardPass(x3);
+    //n.printOutput();
+    //System.out.println();
+
+
+    //System.out.println();
+    //n.printWeights();
 
 
     /////////////////////
@@ -80,9 +87,7 @@ public class Test {
     System.out.println();
 
     t.forwardPass(tData);
-    t.printOutput(0);
-    System.out.println();
-    t.printOutput(1);
+    t.printOutput();
     */
 
   }

@@ -28,7 +28,7 @@ public class Layer {
 
  	/** Create a layer with the given number of neurons, that will have input and output weights */
 
-	public void makeLayers(int prev, int next) {
+	public void makeLayers(int prev) {
 
 		ArrayList<Neuron> neurons = new ArrayList<>();
 		Neuron n;
@@ -37,9 +37,9 @@ public class Layer {
 
 			n = new Neuron();
 
-			n.setInput(n.genWeights(prev));
-			n.setOutput(new ArrayList<Double>(next));
-			n.getOutput().add(0.0);
+			n.setW(n.genWeights(prev));
+			n.setIn(0);
+			n.setA(0);
 
 			neurons.add(n);
 

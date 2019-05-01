@@ -4,29 +4,34 @@ import java.util.Random;
 
 public class Neuron {
 
-	private ArrayList<Double> in;
-	private ArrayList<Double> out;
-
-	public Neuron() {
-
-	}
+	private ArrayList<Double> w;
+	private double in;
+	private double a;
 
 	// Setters & Getters
 
-	public void setInput(ArrayList<Double> weights) {
-		this.in = weights;
+	public void setW(ArrayList<Double> weights) {
+		this.w = weights;
 	}
 
-	public void setOutput(ArrayList<Double> weights) {
-		this.out = weights;
+	public void setIn(double in) {
+		this.in = in;
 	}
 
-	public ArrayList<Double> getInput() {
+	public void setA(double a) {
+		this. a = a;
+	}
+
+	public ArrayList<Double> getW() {
+		return w;
+	}
+
+	public double getIn() {
 		return in;
 	}
 
-	public ArrayList<Double> getOutput() {
-		return out;
+	public double getA() {
+		return a;
 	}
 
 	/** Generate random input weights for the neuron in that layer. */
@@ -34,9 +39,12 @@ public class Neuron {
 	public ArrayList<Double> genWeights(int size) {
 
 		ArrayList<Double> weights = new ArrayList<>(size);
+		double w;
 
 		for(int i = 0; i < size; i++) {
-			weights.add(new Random().nextDouble());
+			w =  new Random().nextDouble() - new Random().nextDouble();
+			weights.add(w);
+
 		}
 
 		return weights;
