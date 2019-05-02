@@ -42,7 +42,7 @@ public class Neuron {
 		double w;
 
 		for(int i = 0; i < size; i++) {
-			w =  new Random().nextDouble() - new Random().nextDouble();
+			w = new Random().nextDouble() - new Random().nextDouble();
 			weights.add(w);
 
 		}

@@ -12,7 +12,7 @@ public class NeuralNetwork {
 	private int inputLayerCount;
 	private int hiddenLayerCount;
 	private int ouputLayerCount;
-	double eta = -0.30;
+	double eta = -0.09;
 
 	public ArrayList<Layer> getLayers() {
 		return layers;
@@ -29,7 +29,7 @@ public class NeuralNetwork {
 	}
 
 	public double error(double target, double output) {
-		return target - output;
+		return target-output;
 	}
 
 	/** Build a network with the given number of input, hidden, and output neurons in each layer.
@@ -112,7 +112,7 @@ public class NeuralNetwork {
 
 				}
 
-				sum += 1 * bias.get(l).getNeurons().get(0).getW().get(j); // Add the bias to each node ouput
+				sum += bias.get(l).getNeurons().get(0).getW().get(j); // Add the bias to each node ouput
 
 				layers.get(l).getNeurons().get(j).setIn(sum);
 				layers.get(l).getNeurons().get(j).setA(activationFunction(sum));
@@ -180,9 +180,9 @@ public class NeuralNetwork {
 				for(int i = 0; i < z.getW().size(); i++) { // For each weight in that neuron
 
 					if(l == 0) {
-						change = input.get(i) * tmp.get(j);
+						change = tmp.get(j) * input.get(i);
 					} else {
-						change = layers.get(l-1).getNeurons().get(i).getA() * tmp.get(j);
+						change = tmp.get(j) * layers.get(l-1).getNeurons().get(i).getA();
 					}
 
 					z.getW().set(i, z.getW().get(i) + (eta * change));
@@ -190,7 +190,7 @@ public class NeuralNetwork {
 				}
 
 				b = bias.get(l).getNeurons().get(0); // Update bias
-				b.getW().set(j, b.getW().get(j) + (eta * tmp.get(j) ));
+				b.getW().set(j, b.getW().get(j) + ( eta * tmp.get(j) ));
 
 			}
 

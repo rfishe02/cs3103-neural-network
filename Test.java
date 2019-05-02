@@ -15,44 +15,53 @@ public class Test {
 
     int input = 56;
     int output =3;
-    int hidden =30;
-    int width = 7;
+    int hidden =20;
+    int width = 3;
 
     NeuralNetwork n = new NeuralNetwork();
     n.buildNetwork(input,hidden,width,output);
 
     ArrayList<Double> xTarget = new ArrayList<>(3);
+    xTarget.add(1.0);
     xTarget.add(0.0);
-    xTarget.add(1.0);
-    xTarget.add(1.0);
+    xTarget.add(0.0);
 
     ArrayList<Double> yTarget = new ArrayList<>(3);
-    yTarget.add(1.0);
     yTarget.add(0.0);
     yTarget.add(1.0);
+    yTarget.add(0.0);
 
     ArrayList<Double> zTarget = new ArrayList<>(3);
-    zTarget.add(1.0);
-    zTarget.add(1.0);
     zTarget.add(0.0);
+    zTarget.add(0.0);
+    zTarget.add(1.0);
 
      // The accuracy is higher when trained one after the other, as opposed to separately
      // It also worked better with more forward passes
 
      //n.printWeights();
 
-      for(int i = 0; i < 5000; i++) {
+     int choice;
+
+    for(int i = 0; i < 10; i++) {
+
+      choice = new Random().nextInt(3);
+
+      if(choice == 0) {
         n.forwardPass(x);
         n.backpropagate(x,xTarget);
 
+      } else if(choice == 1) {
         n.forwardPass(x2);
         n.backpropagate(x2,yTarget);
 
+      } else {
         n.forwardPass(x3);
         n.backpropagate(x3,zTarget);
 
-    }
+      }
 
+    }
 
     n.forwardPass(x);
     n.printLastOutput();
