@@ -14,14 +14,13 @@ public class Test {
     ArrayList<Double> z = getInput("z1.txt",56);
 
     int input = 56;
-    int output =56;
-    int hidden =30;
-    int width = 2;
+    int output =3;
+    int hidden =43;
+    int width = 3;
 
     NeuralNetwork n = new NeuralNetwork();
     n.buildNetwork(input,hidden,width,output);
 
-    /*
     ArrayList<Double> xTarget = new ArrayList<>(3);
     xTarget.add(0.0);
     xTarget.add(1.0);
@@ -36,20 +35,23 @@ public class Test {
     zTarget.add(1.0);
     zTarget.add(1.0);
     zTarget.add(0.0);
-    */
 
-    int choice;
+    double correct = 0.9;
+    int epochs = 100;
+    int i = 0;
 
-    for(int i = 0; i < 30; i++) {
+    while(correct < 0.60 && i < epochs) {
 
       n.forwardPass(x);
-      n.backpropagate(x,x);
+      n.backpropagate(x,xTarget);
 
       //n.forwardPass(y);
-      //n.backpropagate(y,y);
+      //n.backpropagate(y,yTarget);
 
       //n.forwardPass(z);
-      //n.backpropagate(z,z);
+      //n.backpropagate(z,zTarget);
+
+      i++;
 
     }
 
