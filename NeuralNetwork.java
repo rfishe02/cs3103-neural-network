@@ -12,7 +12,7 @@ public class NeuralNetwork {
 	private int inputLayerCount;
 	private int hiddenLayerCount;
 	private int ouputLayerCount;
-	double eta = -0.09;
+	double eta = -0.050;
 
 	public ArrayList<Layer> getLayers() {
 		return layers;
@@ -50,23 +50,28 @@ public class NeuralNetwork {
 			b = new Layer();
 			h = new Layer();
 
+			b.setNeuronCount(1);
+
 			if (l == 0) {
 				h.setNeuronCount(hidden);
 				h.makeLayers(input);
 
+				b.makeLayers(hidden);
+
 			} else if (l == width-1) {
 				h.setNeuronCount(output);
 				h.makeLayers(hidden);
+
+				b.makeLayers(output);
 
 			}
 			else {
 				h.setNeuronCount(hidden);
 				h.makeLayers(hidden);
 
-			}
+				b.makeLayers(hidden);
 
-			b.setNeuronCount(1);
-			b.makeLayers(hidden);
+			}
 
 			bLayers.add(b);
 			layers.add(h);
@@ -249,7 +254,11 @@ public class NeuralNetwork {
 		for(int n = 0; n < layers.get(layers.size()-1).getNeurons().size(); n++) {
 			z = layers.get(layers.size()-1).getNeurons().get(n);
 
-			System.out.printf("%4.3f %4.3f\n",z.getIn(),z.getA());
+			System.out.printf("%2d",Math.round(z.getA()));
+
+			if((n+1) % 8 == 0) {
+				System.out.println();
+			}
 		}
 		System.out.println();
 

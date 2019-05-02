@@ -10,70 +10,63 @@ public class Test {
   public static void main(String[] args) {
 
     ArrayList<Double> x = getInput("x1.txt",56);
-    ArrayList<Double> x2 = getInput("y1.txt",56);
-    ArrayList<Double> x3 = getInput("z1.txt",56);
+    ArrayList<Double> y = getInput("y1.txt",56);
+    ArrayList<Double> z = getInput("z1.txt",56);
 
     int input = 56;
-    int output =3;
-    int hidden =20;
-    int width = 3;
+    int output =56;
+    int hidden =30;
+    int width = 2;
 
     NeuralNetwork n = new NeuralNetwork();
     n.buildNetwork(input,hidden,width,output);
 
+    /*
     ArrayList<Double> xTarget = new ArrayList<>(3);
+    xTarget.add(0.0);
     xTarget.add(1.0);
-    xTarget.add(0.0);
-    xTarget.add(0.0);
+    xTarget.add(1.0);
 
     ArrayList<Double> yTarget = new ArrayList<>(3);
-    yTarget.add(0.0);
     yTarget.add(1.0);
     yTarget.add(0.0);
+    yTarget.add(1.0);
 
     ArrayList<Double> zTarget = new ArrayList<>(3);
-    zTarget.add(0.0);
-    zTarget.add(0.0);
     zTarget.add(1.0);
+    zTarget.add(1.0);
+    zTarget.add(0.0);
+    */
 
-     // The accuracy is higher when trained one after the other, as opposed to separately
-     // It also worked better with more forward passes
+    int choice;
 
-     //n.printWeights();
+    for(int i = 0; i < 30; i++) {
 
-     int choice;
+      n.forwardPass(x);
+      n.backpropagate(x,x);
 
-    for(int i = 0; i < 10; i++) {
+      //n.forwardPass(y);
+      //n.backpropagate(y,y);
 
-      choice = new Random().nextInt(3);
-
-      if(choice == 0) {
-        n.forwardPass(x);
-        n.backpropagate(x,xTarget);
-
-      } else if(choice == 1) {
-        n.forwardPass(x2);
-        n.backpropagate(x2,yTarget);
-
-      } else {
-        n.forwardPass(x3);
-        n.backpropagate(x3,zTarget);
-
-      }
+      //n.forwardPass(z);
+      //n.backpropagate(z,z);
 
     }
+
+    //train(n,x,100);
+    //train(n,y,100);
 
     n.forwardPass(x);
     n.printLastOutput();
     System.out.println();
 
-    n.forwardPass(x2);
+    n.forwardPass(y);
     n.printLastOutput();
     System.out.println();
 
-    n.forwardPass(x3);
-    n.printLastOutput();
-    System.out.println();
+    //n.forwardPass(z);
+    //n.printLastOutput();
+    //System.out.println();
 
 
     //System.out.println();
@@ -101,6 +94,15 @@ public class Test {
 
   }
 
+  public static void train(NeuralNetwork n, ArrayList<Double> x, int epochs) {
+
+    for(int i = 0; i < epochs; i++) {
+      n.forwardPass(x);
+      n.backpropagate(x,x);
+    }
+
+  }
+
   /** Read an 8 x 7 text file, with a letter written with the character X. */
 
   public static ArrayList<Double> getInput(String filename, int size) {
@@ -116,9 +118,9 @@ public class Test {
         for(int i = 0; i < read.length(); i++) {
 
           if(Character.compare(read.charAt(i),'.') == 0) {
-            output.add(0.0);
-          } else {
             output.add(1.0);
+          } else {
+            output.add(0.0);
           }
 
         }
