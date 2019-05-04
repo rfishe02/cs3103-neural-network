@@ -42,13 +42,13 @@ public class Test {
         n.backpropagate(tNode.getLetter(),tNode.getTarget());
       }
 
-      // Test with the remaining group.
+      // Test with the remaining group. Calculatehe number of correct classifications.
 
       correct = 0;
 
       for(Node test : a.get(three)) {
 
-        n.forwardPass(test.getLetter());
+        n.forwardPass(test.getLetter()); // Pass the data through the network.
 
         max = 0.0;
         maxOutcome = 0;
@@ -59,16 +59,15 @@ public class Test {
             maxOutcome = c;
           }
 
-        }
+        } // Find the neuron with the highest result. This should match the target of the test case.
 
         if(maxOutcome == test.getN() && max > .70) {
           correct += 1.0;
-        }
+        } // The outcome needs to be at a sufficient level.
 
         System.out.print("Target Neuron "+test.getN()+"  Outcome: ");
         n.printLastOutput();
-        System.out.println(maxOutcome + " " + max);
-
+        
       }
 
       correct = correct / a.get(three).size();
