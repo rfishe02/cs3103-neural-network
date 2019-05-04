@@ -106,24 +106,24 @@ public class Test {
     Node tNode;
     double[] outcome;
     int i = 0;
+    int x;
 
     try {
 
       BufferedWriter bw = new BufferedWriter(new FileWriter("training-output-"+epochs+"-"+tGroup.get(0)+"-"+tGroup.get(1)+".txt"));
-      bw.write("epoch,tGroup,target,outcome,probX,probY,probZ");
+      bw.write("epoch,tGroup,target,outcome,probX,probY,probZ\n");
 
       while(i < epochs) {
 
         // Train with the two selected groups. Select a random record to train with.
+        x = rand.nextInt(tGroup.size());
 
-        for(Integer x : tGroup) {
-          tNode = a.get(x).get(rand.nextInt(a.get(x).size()));
-          n.forwardPass(tNode.getLetter());
-          n.backpropagate(tNode.getLetter(),tNode.getTarget());
+        tNode = a.get(x).get(rand.nextInt(a.get(x).size()));
+        n.forwardPass(tNode.getLetter());
+        n.backpropagate(tNode.getLetter(),tNode.getTarget());
 
-          outcome = getOutcome(n);
-          bw.write(i+","+x+","+tNode.getN()+","+(int)outcome[1]+","+n.getLastOutput()+"\n");
-        }
+        outcome = getOutcome(n);
+        bw.write(i+","+x+","+tNode.getN()+","+(int)outcome[1]+","+n.getLastOutput()+"\n");
 
         i++;
 
@@ -193,25 +193,6 @@ public class Test {
     outcome[1] = max;
 
     return outcome;
-
-  }
-
-  public void printArrayList(ArrayList<ArrayList<Double>> output) {
-
-    for(ArrayList<Double> a : output) {
-
-      for(int i = 0; i < a.size(); i++) {
-
-        System.out.print(Math.round(a.get(i))+" ");
-
-        if((i+1)%8 == 0) {
-          System.out.println();
-        }
-
-      }
-      System.out.println();
-
-    }
 
   }
 
