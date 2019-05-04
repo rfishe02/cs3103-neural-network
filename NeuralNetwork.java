@@ -12,7 +12,7 @@ public class NeuralNetwork {
 	private int inputLayerCount;
 	private int hiddenLayerCount;
 	private int ouputLayerCount;
-	double eta = -0.050;
+	double eta = -0.10;
 
 	public ArrayList<Layer> getLayers() {
 		return layers;
@@ -29,7 +29,7 @@ public class NeuralNetwork {
 	}
 
 	public double error(double target, double output) {
-		return target-output;
+		return output-target;
 	}
 
 	/** Build a network with the given number of input, hidden, and output neurons in each layer.
@@ -47,9 +47,9 @@ public class NeuralNetwork {
 
 		for (int l = 0; l < width; l++) {
 
-			b = new Layer();
 			h = new Layer();
 
+			b = new Layer();
 			b.setNeuronCount(1);
 
 			if (l == 0) {
@@ -254,7 +254,7 @@ public class NeuralNetwork {
 		for(int n = 0; n < layers.get(layers.size()-1).getNeurons().size(); n++) {
 			z = layers.get(layers.size()-1).getNeurons().get(n);
 
-			System.out.printf("%2d",Math.round(z.getA()));
+			System.out.printf("%2.2f ",z.getA());
 
 			if((n+1) % 8 == 0) {
 				System.out.println();

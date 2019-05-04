@@ -15,63 +15,75 @@ public class Test {
 
     int input = 56;
     int output =3;
-    int hidden =43;
+    int hidden =30;
     int width = 3;
 
     NeuralNetwork n = new NeuralNetwork();
     n.buildNetwork(input,hidden,width,output);
 
     ArrayList<Double> xTarget = new ArrayList<>(3);
+    xTarget.add(1.0);
     xTarget.add(0.0);
-    xTarget.add(1.0);
-    xTarget.add(1.0);
+    xTarget.add(0.0);
 
     ArrayList<Double> yTarget = new ArrayList<>(3);
-    yTarget.add(1.0);
     yTarget.add(0.0);
     yTarget.add(1.0);
+    yTarget.add(0.0);
 
     ArrayList<Double> zTarget = new ArrayList<>(3);
-    zTarget.add(1.0);
-    zTarget.add(1.0);
     zTarget.add(0.0);
+    zTarget.add(0.0);
+    zTarget.add(1.0);
 
-    double correct = 0.9;
-    int epochs = 100;
+    Neuron a;
+    double correct = 0.0;
+    int epochs = 1000;
     int i = 0;
 
-    while(correct < 0.60 && i < epochs) {
+    while(correct < 0.70 && i < epochs) {
+
+      correct = 0;
 
       n.forwardPass(x);
       n.backpropagate(x,xTarget);
 
-      //n.forwardPass(y);
-      //n.backpropagate(y,yTarget);
+      n.forwardPass(y);
+      n.backpropagate(y,yTarget);
 
-      //n.forwardPass(z);
-      //n.backpropagate(z,zTarget);
+      n.forwardPass(z);
+      n.backpropagate(z,zTarget);
+
+      n.forwardPass(x);
+      if(n.getLayers().get(n.getLayers().size()-1).getNeurons().get(0).getA() > .70) {
+        correct += 1.0;
+      }
+      n.printLastOutput();
+
+      n.forwardPass(y);
+      if(n.getLayers().get(n.getLayers().size()-1).getNeurons().get(1).getA() > .70) {
+        correct += 1.0;
+      }
+      n.printLastOutput();
+
+      n.forwardPass(z);
+      if(n.getLayers().get(n.getLayers().size()-1).getNeurons().get(2).getA() > .70) {
+        correct += 1.0;
+      }
+      n.printLastOutput();
+
+      correct = correct / 3.0;
+      System.out.println(correct);
 
       i++;
 
     }
 
+    System.out.println(i);
+
     //train(n,x,100);
     //train(n,y,100);
 
-    n.forwardPass(x);
-    n.printLastOutput();
-    System.out.println();
-
-    n.forwardPass(y);
-    n.printLastOutput();
-    System.out.println();
-
-    //n.forwardPass(z);
-    //n.printLastOutput();
-    //System.out.println();
-
-
-    //System.out.println();
     //n.printWeights();
 
 
@@ -120,9 +132,9 @@ public class Test {
         for(int i = 0; i < read.length(); i++) {
 
           if(Character.compare(read.charAt(i),'.') == 0) {
-            output.add(1.0);
-          } else {
             output.add(0.0);
+          } else {
+            output.add(1.0);
           }
 
         }
