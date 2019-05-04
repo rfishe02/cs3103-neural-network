@@ -5,10 +5,12 @@ public class Node {
 
   private ArrayList<Double> letter;
   private ArrayList<Double> target;
+  private int n;
 
-  public Node(ArrayList<Double> letter, ArrayList<Double> target) {
+  public Node(ArrayList<Double> letter, ArrayList<Double> target, int n) {
     this.letter = letter;
     this.target = target;
+    this.n = n;
   }
 
   public ArrayList<Double> getLetter() {
@@ -19,12 +21,8 @@ public class Node {
     return target;
   }
 
-  public void setLetter(ArrayList<Double> letter) {
-    this.letter = letter;
-  }
-
-  public void setTarget(ArrayList<Double> target) {
-    this.target = target;
+  public int getN() {
+    return n;
   }
 
 }

@@ -15,66 +15,70 @@ public class Test {
     int hidden =30;
     int width = 3;
 
-    getArray("test.txt");
-
-    /*
     NeuralNetwork n = new NeuralNetwork();
     n.buildNetwork(input,hidden,width,output);
 
-    ArrayList<Double> xTarget = new ArrayList<>(Arrays.asList(1.0,0.0,0.0));
+    ArrayList<ArrayList<Node>> a = getArray("test.txt"); // This is the training & test data.
+    ArrayList<Integer> tGroup = new ArrayList<>(Arrays.asList(0,1));
+    int three = 2;
 
-    ArrayList<Double> yTarget = new ArrayList<>(Arrays.asList(0.0,1.0,0.0));
+    Random rand = new Random();
+    Node tNode;
 
-    ArrayList<Double> zTarget = new ArrayList<>(Arrays.asList(0.0,0.0,1.0));
-    */
-
-    Neuron a;
     double correct = 0.0;
+    double max;
+    int maxOutcome;
+
     int epochs = 1000;
     int i = 0;
 
-    /*
     while(correct < 0.70 && i < epochs) {
+
+      // Train with the two selected groups. Select a random record to train with.
+
+      for(Integer x : tGroup) {
+        tNode = a.get(x).get(rand.nextInt(a.get(x).size()));
+        n.forwardPass(tNode.getLetter());
+        n.backpropagate(tNode.getLetter(),tNode.getTarget());
+      }
+
+      // Test with the remaining group.
 
       correct = 0;
 
+      for(Node test : a.get(three)) {
 
+        n.forwardPass(test.getLetter());
 
-      n.forwardPass(x);
-      n.backpropagate(x,xTarget);
+        max = 0.0;
+        maxOutcome = 0;
+        for(int c = 0; c < n.getLayers().get(n.getLayers().size()-1).getNeuronCount(); c++) {
 
-      n.forwardPass(y);
-      n.backpropagate(y,yTarget);
+          if(n.getLayers().get(n.getLayers().size()-1).getNeurons().get(c).getA() > max) {
+            max = n.getLayers().get(n.getLayers().size()-1).getNeurons().get(c).getA();
+            maxOutcome = c;
+          }
 
-      n.forwardPass(z);
-      n.backpropagate(z,zTarget);
+        }
 
-      n.forwardPass(x);
-      if(n.getLayers().get(n.getLayers().size()-1).getNeurons().get(0).getA() > .70) {
-        correct += 1.0;
+        if(maxOutcome == test.getN() && max > .70) {
+          correct += 1.0;
+        }
+
+        System.out.print("Target Neuron "+test.getN()+"  Outcome: ");
+        n.printLastOutput();
+        System.out.println(maxOutcome + " " + max);
+
       }
-      n.printLastOutput();
 
-      n.forwardPass(y);
-      if(n.getLayers().get(n.getLayers().size()-1).getNeurons().get(1).getA() > .70) {
-        correct += 1.0;
-      }
-      n.printLastOutput();
-
-      n.forwardPass(z);
-      if(n.getLayers().get(n.getLayers().size()-1).getNeurons().get(2).getA() > .70) {
-        correct += 1.0;
-      }
-      n.printLastOutput();
-
-      correct = correct / 3.0;
+      correct = correct / a.get(three).size();
       System.out.println(correct);
 
       i++;
 
-    }*/
+    }
 
-    //System.out.println(i);
+    System.out.println(i);
 
   }
 
@@ -114,13 +118,16 @@ public class Test {
 
           if(read.equals("X")) {
             target = new ArrayList<>(Arrays.asList(1.0,0.0,0.0));
+            n = new Node(tmp,target,0);
           } else if(read.equals("Y")) {
             target = new ArrayList<>(Arrays.asList(0.0,1.0,0.0));
+            n = new Node(tmp,target,1);
           } else {
             target = new ArrayList<>(Arrays.asList(0.0,0.0,1.0));
+            n = new Node(tmp,target,2);
           }
 
-          output.get(rand.nextInt(3)).add(new Node(tmp,target)); // Add at random to one of three ArrayLists.
+          output.get(rand.nextInt(3)).add(n); // Add at random to one of three ArrayLists.
           tmp = new ArrayList<>();
 
         } else {
