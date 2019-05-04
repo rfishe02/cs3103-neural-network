@@ -5,7 +5,7 @@ x......x
 ..x..x..
 .x....x.
 x......x
-
+X
 x......x
 .x....x.
 ..x..x..
@@ -13,7 +13,7 @@ x......x
 ...xx...
 ...xx...
 ...xx...
-
+Y
 xxxxxxxx
 ......x.
 .....x..
@@ -22,7 +22,7 @@ xxxxxxxx
 ..x.....
 .x......
 xxxxxxxx
-
+Z
 xx....xx
 xx....xx
 ..x..x..
@@ -30,7 +30,7 @@ xx....xx
 ..x..x..
 xx....xx
 xx....xx
-
+X
 xx....xx
 xx....xx
 ..x..x..
@@ -38,7 +38,7 @@ xx....xx
 ...xx...
 ...xx...
 ..xxxx..
-
+Y
 xxxxxxxx
 xx....xx
 .....xx.
@@ -47,7 +47,7 @@ xx....xx
 .xx.....
 xx....xx
 xxxxxxxx
-
+Z
 ........
 .x....x.
 ..x..x..
@@ -55,7 +55,7 @@ xxxxxxxx
 ..x..x..
 .x....x.
 ........
-
+X
 ........
 .x....x.
 ..x..x..
@@ -63,7 +63,7 @@ xxxxxxxx
 ...xx...
 ...xx...
 ........
-
+Y
 ........
 .xxxxxx.
 .....x..
@@ -72,7 +72,7 @@ xxxxxxxx
 ..x.....
 .xxxxxx.
 ........
-
+Z
 x......x
 .x....x.
 .xx..xx.
@@ -80,7 +80,7 @@ x......x
 .xx..xx.
 .x....x.
 x......x
-
+X
 x......x
 .x....x.
 .xx..xx.
@@ -88,7 +88,7 @@ x......x
 ...xx...
 ...xx...
 ...xx...
-
+Y
 xxxxxxxx
 ......x.
 .....xx.
@@ -97,7 +97,7 @@ xxxxxxxx
 .xx.....
 .x......
 xxxxxxxx
-
+Z
 xxx..xxx
 xxx..xxx
 .xx..xx.
@@ -105,7 +105,7 @@ xxx..xxx
 .xx..xx.
 xxx..xxx
 xxx..xxx
-
+X
 xxx..xxx
 xxx..xxx
 xxx..xxx
@@ -113,7 +113,7 @@ xxx..xxx
 ..xxxx..
 ..xxxx..
 ..xxxx..
-
+Y
 xxxxxxxx
 xxxxxxxx
 ....xxx.
@@ -122,7 +122,7 @@ xxxxxxxx
 .xxx....
 xxxxxxxx
 xxxxxxxx
-
+Z
 x......x
 ........
 ..x..x..
@@ -130,7 +130,7 @@ x......x
 ..x..x..
 ........
 x......x
-
+X
 x......x
 ........
 ..x..x..
@@ -138,7 +138,7 @@ x......x
 ...xx...
 ........
 ...xx...
-
+Y
 xxxxxxxx
 ........
 .....x..
@@ -147,3 +147,28 @@ xxxxxxxx
 ..x.....
 ........
 xxxxxxxx
+Z
+........
+........
+..x..x..
+...xx...
+..x..x..
+........
+........
+X
+........
+........
+..x..x..
+...xx...
+...xx...
+........
+........
+Y
+........
+........
+.xxxxx..
+....x...
+...x....
+..xxxxx.
+........
+Z
