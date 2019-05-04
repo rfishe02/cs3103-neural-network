@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.Arrays;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 
 public class Test {
 
@@ -22,71 +24,11 @@ public class Test {
     ArrayList<Integer> tGroup = new ArrayList<>(Arrays.asList(0,1));
     int three = 2;
 
-    Random rand = new Random();
-    Node tNode;
+    int epochs = 600;
 
-    double correct = 0.0;
-    double max;
-    int maxOutcome;
+    train(a,n,tGroup,epochs);
 
-    int epochs = 1000;
-    int i = 0;
-
-    while(correct < 0.70 && i < epochs) {
-
-      // Train with the two selected groups. Select a random record to train with.
-
-      for(Integer x : tGroup) {
-        tNode = a.get(x).get(rand.nextInt(a.get(x).size()));
-        n.forwardPass(tNode.getLetter());
-        n.backpropagate(tNode.getLetter(),tNode.getTarget());
-      }
-
-      // Test with the remaining group. Calculatehe number of correct classifications.
-
-      correct = 0;
-
-      for(Node test : a.get(three)) {
-
-        n.forwardPass(test.getLetter()); // Pass the data through the network.
-
-        max = 0.0;
-        maxOutcome = 0;
-        for(int c = 0; c < n.getLayers().get(n.getLayers().size()-1).getNeuronCount(); c++) {
-
-          if(n.getLayers().get(n.getLayers().size()-1).getNeurons().get(c).getA() > max) {
-            max = n.getLayers().get(n.getLayers().size()-1).getNeurons().get(c).getA();
-            maxOutcome = c;
-          }
-
-        } // Find the neuron with the highest result. This should match the target of the test case.
-
-        if(maxOutcome == test.getN() && max > .70) {
-          correct += 1.0;
-        } // The outcome needs to be at a sufficient level.
-
-        System.out.print("Target Neuron "+test.getN()+"  Outcome: ");
-        n.printLastOutput();
-        
-      }
-
-      correct = correct / a.get(three).size();
-      System.out.println(correct);
-
-      i++;
-
-    }
-
-    System.out.println(i);
-
-  }
-
-  public static void train(NeuralNetwork n, ArrayList<Double> x, ArrayList<Double> y, int epochs) {
-
-    for(int i = 0; i < epochs; i++) {
-      n.forwardPass(x);
-      n.backpropagate(x,y);
-    }
+    test(a,n,three,epochs);
 
   }
 
@@ -154,6 +96,103 @@ public class Test {
     }
 
     return output;
+
+  }
+
+
+  public static void train(ArrayList<ArrayList<Node>> a, NeuralNetwork n, ArrayList<Integer> tGroup, int epochs) {
+
+    Random rand = new Random();
+    Node tNode;
+    double[] outcome;
+    int i = 0;
+
+    try {
+
+      BufferedWriter bw = new BufferedWriter(new FileWriter("training-output-"+epochs+"-"+tGroup.get(0)+"-"+tGroup.get(1)+".txt"));
+      bw.write("epoch,tGroup,target,outcome,probX,probY,probZ");
+
+      while(i < epochs) {
+
+        // Train with the two selected groups. Select a random record to train with.
+
+        for(Integer x : tGroup) {
+          tNode = a.get(x).get(rand.nextInt(a.get(x).size()));
+          n.forwardPass(tNode.getLetter());
+          n.backpropagate(tNode.getLetter(),tNode.getTarget());
+
+          outcome = getOutcome(n);
+          bw.write(i+","+x+","+tNode.getN()+","+(int)outcome[1]+","+n.getLastOutput()+"\n");
+        }
+
+        i++;
+
+      }
+
+      bw.close();
+
+    } catch(IOException e) {
+
+    }
+
+  }
+
+  public static void test(ArrayList<ArrayList<Node>> a, NeuralNetwork n, int three, int epochs) {
+
+    double[] outcome;
+
+    try {
+
+      BufferedWriter bw = new BufferedWriter(new FileWriter("test-output-"+epochs+"-"+three+".txt"));
+      double correct = 0.0;
+
+      bw.write("target,outcome,probX,probY,probZ\n");
+
+      for(Node test : a.get(three)) {
+
+        n.forwardPass(test.getLetter()); // Pass the data through the network.
+
+        outcome = getOutcome(n);
+
+        if((int)outcome[0] == test.getN() && outcome[1] > .60) {
+          correct += 1.0;
+        } // The outcome needs to be at a sufficient level.
+
+        bw.write(test.getN()+","+(int)outcome[0]+",");
+        bw.write(n.getLastOutput()+"\n");
+
+      }
+
+      correct = correct / a.get(three).size();
+      System.out.println(correct);
+
+      bw.close();
+
+    } catch(IOException e) {
+
+    }
+
+  }
+
+  public static double[] getOutcome(NeuralNetwork n) {
+
+    double[] outcome = new double[2];
+    double max = 0.0;
+    int maxOutcome = 0;
+
+    for(int c = 0; c < n.getLayers().get(n.getLayers().size()-1).getNeuronCount(); c++) {
+
+      if(n.getLayers().get(n.getLayers().size()-1).getNeurons().get(c).getA() > max) {
+        max = n.getLayers().get(n.getLayers().size()-1).getNeurons().get(c).getA();
+        maxOutcome = c;
+      }
+
+    } // Find the neuron with the highest result. This should match the target of the case.
+
+    outcome[0] = (double)maxOutcome;
+    outcome[1] = max;
+
+    return outcome;
 
   }
 

@@ -264,4 +264,22 @@ public class NeuralNetwork {
 
 	}
 
+	public String getLastOutput() {
+
+		String s = "";
+		Neuron z;
+
+		for(int n = 0; n < layers.get(layers.size()-1).getNeurons().size(); n++) {
+			z = layers.get(layers.size()-1).getNeurons().get(n);
+
+			s += String.format("%2.2f",z.getA());
+
+			if(n < layers.get(layers.size()-1).getNeurons().size()-1) {
+				s += ",";
+			}
+		}
+
+		return s;
+	}
+
 }
