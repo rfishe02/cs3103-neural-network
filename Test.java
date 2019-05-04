@@ -17,18 +17,39 @@ public class Test {
     int hidden =30;
     int width = 3;
 
-    NeuralNetwork n = new NeuralNetwork();
-    n.buildNetwork(input,hidden,width,output);
-
     ArrayList<ArrayList<Node>> a = getArray("test.txt"); // This is the training & test data.
     ArrayList<Integer> tGroup = new ArrayList<>(Arrays.asList(0,1));
     int three = 2;
 
+    // 0 1 2
+    // 1 0 2
+    // 2 1 0
+
     int epochs = 600;
 
-    train(a,n,tGroup,epochs);
+    try {
 
-    test(a,n,three,epochs);
+      BufferedWriter bTest = new BufferedWriter(new FileWriter("test-output-"+epochs+"-"+three+".csv"));
+      BufferedWriter bTrain = new BufferedWriter(new FileWriter("training-output-"+epochs+"-"+tGroup.get(0)+"-"+tGroup.get(1)+".csv"));
+      BufferedWriter bWeight = new BufferedWriter(new FileWriter("weights-"+epochs+"-"+tGroup.get(0)+"-"+tGroup.get(1)+".csv"));
+
+      for(int i = 0; i < 10; i++) {
+        NeuralNetwork n = new NeuralNetwork();
+        n.buildNetwork(input,hidden,width,output);
+
+        train(bTrain,a,n,tGroup,epochs,i);
+        test(bTest,a,n,three,epochs,i);
+
+        n.printWeights(bWeight,tGroup,i,epochs);
+      }
+
+      bTest.close();
+      bTrain.close();
+      bWeight.close();
+
+    } catch(IOException ex) {
+      ex.printStackTrace();
+    }
 
   }
 
@@ -100,7 +121,7 @@ public class Test {
   }
 
 
-  public static void train(ArrayList<ArrayList<Node>> a, NeuralNetwork n, ArrayList<Integer> tGroup, int epochs) {
+  public static void train(BufferedWriter bw, ArrayList<ArrayList<Node>> a, NeuralNetwork n, ArrayList<Integer> tGroup, int epochs, int round) throws IOException {
 
     Random rand = new Random();
     Node tNode;
@@ -108,69 +129,49 @@ public class Test {
     int i = 0;
     int x;
 
-    try {
+    bw.write("round,epoch,tGroup,target,outcome,probX,probY,probZ\n");
 
-      BufferedWriter bw = new BufferedWriter(new FileWriter("training-output-"+epochs+"-"+tGroup.get(0)+"-"+tGroup.get(1)+".txt"));
-      bw.write("epoch,tGroup,target,outcome,probX,probY,probZ\n");
+    while(i < epochs) {
 
-      while(i < epochs) {
+      // Train with the two selected groups. Select a random record to train with.
+      x = rand.nextInt(tGroup.size());
 
-        // Train with the two selected groups. Select a random record to train with.
-        x = rand.nextInt(tGroup.size());
+      tNode = a.get(x).get(rand.nextInt(a.get(x).size()));
+      n.forwardPass(tNode.getLetter());
+      n.backpropagate(tNode.getLetter(),tNode.getTarget());
 
-        tNode = a.get(x).get(rand.nextInt(a.get(x).size()));
-        n.forwardPass(tNode.getLetter());
-        n.backpropagate(tNode.getLetter(),tNode.getTarget());
+      outcome = getOutcome(n);
+      bw.write(round+","+i+","+x+","+tNode.getN()+","+(int)outcome[1]+","+n.getLastOutput()+"\n");
 
-        outcome = getOutcome(n);
-        bw.write(i+","+x+","+tNode.getN()+","+(int)outcome[1]+","+n.getLastOutput()+"\n");
-
-        i++;
-
-      }
-
-      bw.close();
-
-    } catch(IOException e) {
+      i++;
 
     }
 
   }
 
-  public static void test(ArrayList<ArrayList<Node>> a, NeuralNetwork n, int three, int epochs) {
+  public static void test(BufferedWriter bw, ArrayList<ArrayList<Node>> a, NeuralNetwork n, int three, int epochs, int round) throws IOException {
 
     double[] outcome;
+    double correct = 0.0;
 
-    try {
+    bw.write("round,target,outcome,probX,probY,probZ\n");
 
-      BufferedWriter bw = new BufferedWriter(new FileWriter("test-output-"+epochs+"-"+three+".txt"));
-      double correct = 0.0;
+    for(Node test : a.get(three)) {
 
-      bw.write("target,outcome,probX,probY,probZ\n");
+      n.forwardPass(test.getLetter()); // Pass the data through the network.
 
-      for(Node test : a.get(three)) {
+      outcome = getOutcome(n);
 
-        n.forwardPass(test.getLetter()); // Pass the data through the network.
+      if((int)outcome[0] == test.getN() && outcome[1] > .60) {
+        correct += 1.0;
+      } // The outcome needs to be at a sufficient level.
 
-        outcome = getOutcome(n);
-
-        if((int)outcome[0] == test.getN() && outcome[1] > .60) {
-          correct += 1.0;
-        } // The outcome needs to be at a sufficient level.
-
-        bw.write(test.getN()+","+(int)outcome[0]+",");
-        bw.write(n.getLastOutput()+"\n");
-
-      }
-
-      correct = correct / a.get(three).size();
-      System.out.println(correct);
-
-      bw.close();
-
-    } catch(IOException e) {
+      bw.write(round+","+test.getN()+","+(int)outcome[0]+","+n.getLastOutput()+"\n");
 
     }
+
+    correct = correct / a.get(three).size();
+    System.out.println(correct);
 
   }
 
