@@ -32,19 +32,19 @@ public class Test {
     // 1 0 2
     // 2 1 0
 
-    int epochs = 900;
+    int epochs = 700;
 
     try {
 
+      BufferedWriter bTest = new BufferedWriter(new FileWriter("test-output-"+epochs+".csv"));
+      BufferedWriter bTrain = new BufferedWriter(new FileWriter("training-output-"+epochs+".csv"));
+      BufferedWriter bWeight = new BufferedWriter(new FileWriter("weights-"+epochs+".csv"));
+
+      bTrain.write("tGroup,round,epoch,target,outcome,probX,probY,probZ\n");
+      bTest.write("tGroup,round,target,outcome,probX,probY,probZ\n");
+      bWeight.write("tGroup,round,epoch,layer,neuron,type,weight,value\n");
+
       for(int a = 0; a < 3; a++) {
-
-        BufferedWriter bTest = new BufferedWriter(new FileWriter("test-output-"+epochs+"-"+three[a]+".csv"));
-        BufferedWriter bTrain = new BufferedWriter(new FileWriter("training-output-"+epochs+"-"+tGroup.get(a)[0]+"-"+tGroup.get(a)[1]+".csv"));
-        BufferedWriter bWeight = new BufferedWriter(new FileWriter("weights-"+epochs+"-"+tGroup.get(a)[0]+"-"+tGroup.get(a)[1]+".csv"));
-
-        bTrain.write("round,epoch,tGroup,target,outcome,probX,probY,probZ\n");
-        bTest.write("round,target,outcome,probX,probY,probZ\n");
-        bWeight.write("round,epoch,layer,neuron,type,weight,value\n");
 
         for(int i = 0; i < 10; i++) {
           NeuralNetwork n = new NeuralNetwork();
@@ -53,14 +53,14 @@ public class Test {
           train(bTrain,tData,n,tGroup.get(a),epochs,i);
           test(bTest,tData,n,three[a],epochs,i);
 
-          n.printWeights(bWeight,i,epochs);
+          n.printWeights(bWeight,tGroup.get(a),i,epochs);
         }
 
-        bTest.close();
-        bTrain.close();
-        bWeight.close();
-
       }
+
+      bTest.close();
+      bTrain.close();
+      bWeight.close();
 
     } catch(IOException ex) {
       ex.printStackTrace();
@@ -154,7 +154,7 @@ public class Test {
       n.backpropagate(tNode.getLetter(),tNode.getTarget());
 
       outcome = getOutcome(n);
-      bw.write(round+","+i+","+x+","+tNode.getN()+","+(int)outcome[1]+","+n.getLastOutput()+"\n");
+      bw.write(tGroup[0]+"-"+tGroup[1]+","+round+","+i+","+tNode.getN()+","+(int)outcome[0]+","+n.getLastOutput()+"\n"); //"tGroup,round,epoch,target,outcome,probX,probY,probZ\n"
 
       i++;
 
@@ -177,7 +177,7 @@ public class Test {
         correct += 1.0;
       } // The outcome needs to be at a sufficient level.
 
-      bw.write(round+","+test.getN()+","+(int)outcome[0]+","+n.getLastOutput()+"\n");
+      bw.write(three+","+round+","+test.getN()+","+(int)outcome[0]+","+n.getLastOutput()+"\n"); //"tGroup,round,target,outcome,probX,probY,probZ\n"
 
     }
 

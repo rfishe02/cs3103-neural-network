@@ -285,20 +285,20 @@ public class NeuralNetwork {
 		return s;
 	}
 
-	public void printWeights(BufferedWriter bw, int round, int epoch) throws IOException {
+	public void printWeights(BufferedWriter bw, int[] tGroup, int round, int epoch) throws IOException {
 
 		for(int l = 0; l < layers.size(); l++) {
 
 			for(int n = 0; n < layers.get(l).getNeuronCount(); n++) {
 
 				for(int w = 0; w < layers.get(l).getNeurons().get(n).getW().size(); w++) {
-					bw.write(round+","+epoch+","+l+","+n+",N,"+w+","+layers.get(l).getNeurons().get(n).getW().get(w)+"\n");
+					bw.write(tGroup[0]+"-"+tGroup[1]+","+round+","+epoch+","+l+","+n+",N,"+w+","+layers.get(l).getNeurons().get(n).getW().get(w)+"\n"); //"tGroup,round,epoch,layer,neuron,type,weight,value\n"
 				}
 
 			}
 
 			for(int w = 0; w < bias.get(l).getNeurons().get(0).getW().size(); w++) {
-				bw.write(round+","+epoch+","+l+","+0+",B,"+w+","+bias.get(l).getNeurons().get(0).getW().get(w)+"\n");
+				bw.write(tGroup[0]+"-"+tGroup[1]+","+round+","+epoch+","+l+","+0+",B,"+w+","+bias.get(l).getNeurons().get(0).getW().get(w)+"\n");
 			}
 
 		}
