@@ -32,7 +32,7 @@ public class Test {
     // 1 0 2
     // 2 1 0
 
-    int epochs = 600;
+    int epochs = 900;
 
     try {
 
