@@ -285,9 +285,7 @@ public class NeuralNetwork {
 		return s;
 	}
 
-	public void printWeights(BufferedWriter bw, ArrayList<Integer> tGroup, int round, int epoch) throws IOException {
-
-		bw.write("round,epoch,layer,neuron,type,weight,value\n");
+	public void printWeights(BufferedWriter bw, int round, int epoch) throws IOException {
 
 		for(int l = 0; l < layers.size(); l++) {
 

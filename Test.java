@@ -17,9 +17,16 @@ public class Test {
     int hidden =30;
     int width = 3;
 
-    ArrayList<ArrayList<Node>> a = getArray("test.txt"); // This is the training & test data.
-    ArrayList<Integer> tGroup = new ArrayList<>(Arrays.asList(0,1));
-    int three = 2;
+    ArrayList<ArrayList<Node>> tData = getArray("test.txt"); // This is the training & test data.
+
+    ArrayList<int[]> tGroup = new ArrayList<>();
+    tGroup.add(new int[]{1,2});
+    tGroup.add(new int[]{0,2});
+    tGroup.add(new int[]{1,0});
+
+    int[] three = {
+      0,1,2
+    };
 
     // 0 1 2
     // 1 0 2
@@ -29,23 +36,31 @@ public class Test {
 
     try {
 
-      BufferedWriter bTest = new BufferedWriter(new FileWriter("test-output-"+epochs+"-"+three+".csv"));
-      BufferedWriter bTrain = new BufferedWriter(new FileWriter("training-output-"+epochs+"-"+tGroup.get(0)+"-"+tGroup.get(1)+".csv"));
-      BufferedWriter bWeight = new BufferedWriter(new FileWriter("weights-"+epochs+"-"+tGroup.get(0)+"-"+tGroup.get(1)+".csv"));
+      for(int a = 0; a < 3; a++) {
 
-      for(int i = 0; i < 10; i++) {
-        NeuralNetwork n = new NeuralNetwork();
-        n.buildNetwork(input,hidden,width,output);
+        BufferedWriter bTest = new BufferedWriter(new FileWriter("test-output-"+epochs+"-"+three[a]+".csv"));
+        BufferedWriter bTrain = new BufferedWriter(new FileWriter("training-output-"+epochs+"-"+tGroup.get(a)[0]+"-"+tGroup.get(a)[1]+".csv"));
+        BufferedWriter bWeight = new BufferedWriter(new FileWriter("weights-"+epochs+"-"+tGroup.get(a)[0]+"-"+tGroup.get(a)[1]+".csv"));
 
-        train(bTrain,a,n,tGroup,epochs,i);
-        test(bTest,a,n,three,epochs,i);
+        bTrain.write("round,epoch,tGroup,target,outcome,probX,probY,probZ\n");
+        bTest.write("round,target,outcome,probX,probY,probZ\n");
+        bWeight.write("round,epoch,layer,neuron,type,weight,value\n");
 
-        n.printWeights(bWeight,tGroup,i,epochs);
+        for(int i = 0; i < 10; i++) {
+          NeuralNetwork n = new NeuralNetwork();
+          n.buildNetwork(input,hidden,width,output);
+
+          train(bTrain,tData,n,tGroup.get(a),epochs,i);
+          test(bTest,tData,n,three[a],epochs,i);
+
+          n.printWeights(bWeight,i,epochs);
+        }
+
+        bTest.close();
+        bTrain.close();
+        bWeight.close();
+
       }
-
-      bTest.close();
-      bTrain.close();
-      bWeight.close();
 
     } catch(IOException ex) {
       ex.printStackTrace();
@@ -121,7 +136,7 @@ public class Test {
   }
 
 
-  public static void train(BufferedWriter bw, ArrayList<ArrayList<Node>> a, NeuralNetwork n, ArrayList<Integer> tGroup, int epochs, int round) throws IOException {
+  public static void train(BufferedWriter bw, ArrayList<ArrayList<Node>> a, NeuralNetwork n, int[] tGroup, int epochs, int round) throws IOException {
 
     Random rand = new Random();
     Node tNode;
@@ -129,14 +144,12 @@ public class Test {
     int i = 0;
     int x;
 
-    bw.write("round,epoch,tGroup,target,outcome,probX,probY,probZ\n");
-
     while(i < epochs) {
 
       // Train with the two selected groups. Select a random record to train with.
-      x = rand.nextInt(tGroup.size());
+      x = rand.nextInt(tGroup.length);
 
-      tNode = a.get(x).get(rand.nextInt(a.get(x).size()));
+      tNode = a.get(tGroup[x]).get(rand.nextInt(a.get(tGroup[x]).size()));
       n.forwardPass(tNode.getLetter());
       n.backpropagate(tNode.getLetter(),tNode.getTarget());
 
@@ -153,8 +166,6 @@ public class Test {
 
     double[] outcome;
     double correct = 0.0;
-
-    bw.write("round,target,outcome,probX,probY,probZ\n");
 
     for(Node test : a.get(three)) {
 
