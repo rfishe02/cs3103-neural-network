@@ -29,6 +29,7 @@ public class Test {
     //saveNeuralNetwork(n,"trained-nn");
 
     // Load a trained neural network and test it with a single file.
+    // This network was trained on 7 x 8 sized characters.
 
     n = loadNeuralNetwork("trained-nn");
 
