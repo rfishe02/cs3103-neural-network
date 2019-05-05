@@ -1,9 +1,11 @@
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.io.Serializable;
 
-public class Neuron {
+public class Neuron implements Serializable {
 
+	private static final long serialVersionUID = 1L;
 	private ArrayList<Double> w;
 	private double in;
 	private double a;

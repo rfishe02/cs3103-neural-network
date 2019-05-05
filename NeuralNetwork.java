@@ -1,15 +1,24 @@
 
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.Stack;
+import java.util.LinkedList;
+import java.util.Random;
 import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Serializable;
 
-public class NeuralNetwork {
+public class NeuralNetwork implements Serializable {
 
+	private static final long serialVersionUID = 1L;
 	private ArrayList<Layer> bias;
 	private ArrayList<Layer> layers;
 	private int inputLayerCount;
@@ -257,11 +266,19 @@ public class NeuralNetwork {
 		for(int n = 0; n < layers.get(layers.size()-1).getNeurons().size(); n++) {
 			z = layers.get(layers.size()-1).getNeurons().get(n);
 
-			System.out.printf("%2.2f ",z.getA());
+			if(n == 0) {
+				System.out.printf("X: %2.2f \n",z.getA());
+			} else if(n == 1) {
+				System.out.printf("Y: %2.2f \n",z.getA());
+			} else {
+				System.out.printf("Z: %2.2f \n",z.getA());
+			}
 
+			/*
 			if((n+1) % 8 == 0) {
 				System.out.println();
 			}
+			*/
 		}
 		System.out.println();
 
@@ -300,6 +317,37 @@ public class NeuralNetwork {
 			for(int w = 0; w < bias.get(l).getNeurons().get(0).getW().size(); w++) {
 				bw.write(tGroup[0]+"-"+tGroup[1]+","+round+","+epoch+","+l+","+0+",B,"+w+","+bias.get(l).getNeurons().get(0).getW().get(w)+"\n");
 			}
+
+		}
+
+	}
+
+	public void loadWeights(String filename) {
+
+		try {
+
+			BufferedReader br = new BufferedReader(new FileReader(filename));
+			String[] spl;
+			String read;
+
+			int currentLayer;
+			int currentWeight;
+
+			while((read = br.readLine())!=null) {
+				spl = read.split(",");
+
+				for(int i = 0; i < spl.length; i++) {
+
+
+
+				}
+
+			}
+
+			br.close();
+
+		} catch(IOException e) {
+
 
 		}
 

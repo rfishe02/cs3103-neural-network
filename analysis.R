@@ -3,6 +3,8 @@ sevenTest <- read.csv(file.choose())
 sevenTrain <- read.csv(file.choose())
 sevenWeight <- read.csv(file.choose())
 
+subset(sevenWeight,tGroup == "0-2")
+
 #########################
 # Summary of the data
 ############
@@ -44,6 +46,10 @@ plot(probY ~ epoch, data = dataY,lwd=.5,pch = 19)
 plot(probZ ~ epoch, data = dataZ,lwd=.5,pch = 19,xlab=" ")
 #abline(lm(probZ ~ epoch, data = dataZ), col = "blue",lwd=2.5)
 
+
+cor(dataX$probX,dataX$epoch)
+cor(dataY$probY,dataY$epoch)
+cor(dataZ$probZ,dataZ$epoch)
 
 #########################
 # 
