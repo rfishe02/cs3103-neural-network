@@ -32,7 +32,7 @@ public class Test {
 
     n = loadNeuralNetwork("trained-nn");
 
-    ArrayList<Double> test = getSingleInput("z1.txt");
+    ArrayList<Double> test = getLoneInput("z1.txt");
 
     n.forwardPass(test);
     n.printLastOutput();
@@ -41,7 +41,7 @@ public class Test {
 
   /** Used to build a single arraylist from a file for testing. */
 
-  public static ArrayList<Double> getSingleInput(String filename) {
+  public static ArrayList<Double> getLoneInput(String filename) {
 
     ArrayList<Double> output = new ArrayList<>(56);
 

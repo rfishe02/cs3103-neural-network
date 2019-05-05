@@ -30,8 +30,6 @@ public class NeuralNetwork implements Serializable {
 		return layers;
 	}
 
-	// -----------------------------------------------------
-
 	public double activationFunction(double value) {
 		return 1 / (1 + Math.pow(Math.E, value * -1));
 	}
@@ -50,10 +48,8 @@ public class NeuralNetwork implements Serializable {
 	*/
 
 	public void buildNetwork(int input, int hidden, int width, int output) {
-
 		Layer b;
 		Layer h;
-
 		ArrayList<Layer> bLayers = new ArrayList<>(width);
 		ArrayList<Layer> layers = new ArrayList<>(width);
 
@@ -67,20 +63,17 @@ public class NeuralNetwork implements Serializable {
 			if (l == 0) {
 				h.setNeuronCount(hidden);
 				h.makeLayers(input);
-
 				b.makeLayers(hidden);
 
 			} else if (l == width-1) {
 				h.setNeuronCount(output);
 				h.makeLayers(hidden);
-
 				b.makeLayers(output);
 
 			}
 			else {
 				h.setNeuronCount(hidden);
 				h.makeLayers(hidden);
-
 				b.makeLayers(hidden);
 
 			}
@@ -92,7 +85,6 @@ public class NeuralNetwork implements Serializable {
 
 		this.bias = bLayers;
 		this.layers = layers;
-
 		this.inputLayerCount = input;
 		this.hiddenLayerCount = width;
 		this.ouputLayerCount = output;
@@ -100,11 +92,9 @@ public class NeuralNetwork implements Serializable {
 	}
 
 	/** Conduct a forward pass through the network. This includes a bias node.
-
 	*/
 
 	public void forwardPass(ArrayList<Double> x) {
-
 		Neuron z;
 		double sum;
 
@@ -126,32 +116,25 @@ public class NeuralNetwork implements Serializable {
 						sum += z.getA() * layers.get(l).getNeurons().get(j).getW().get(i);
 
 					}
-
 				}
-
 				sum += bias.get(l).getNeurons().get(0).getW().get(j); // Add the bias to each node ouput
 
 				layers.get(l).getNeurons().get(j).setIn(sum);
 				layers.get(l).getNeurons().get(j).setA(activationFunction(sum));
 
 			}
-
 		}
-
 	}
 
 	/** Conduct the backpropagation phase, and update weights. */
 
 	public void backpropagate(ArrayList<Double> input, ArrayList<Double> target) {
-
 		Stack<ArrayList<Double>> delta = new Stack<ArrayList<Double>>();
 		ArrayList<Double> tmp;
-		Neuron b;
 		Neuron z;
 		double d;
 		double output;
 		double sum;
-		double change;
 
 		for (int l = layers.size() - 1; l >= 0; l--) { // For each layer, from the last to first
 
@@ -177,14 +160,21 @@ public class NeuralNetwork implements Serializable {
 					tmp.add(d * sum); // Calculate O_j (1- O_j) Summation delta_k * W_j+1 k
 
 				}
-
 			} // End for loop
 
 			delta.add(tmp);
 
 		} // End for loop
 
-		// Update the weights
+		updateWeights(input,delta); // Update the weights
+
+	}
+
+	public void updateWeights(ArrayList<Double> input,Stack<ArrayList<Double>> delta) {
+		ArrayList<Double> tmp;
+		Neuron z;
+		Neuron b;
+		double change;
 
 		for(int l = 0; l < layers.size(); l++) { // For each layer
 
@@ -215,10 +205,9 @@ public class NeuralNetwork implements Serializable {
 
 	}
 
-	/** Print all of the weights in the neural network. */
+	/** Print all of the weights in the neural network to the console. */
 
 	public void printWeights() {
-
 		Neuron z;
 
 		for(int l = 0; l < layers.size(); l++) {
@@ -240,10 +229,28 @@ public class NeuralNetwork implements Serializable {
 		}
 	}
 
+	/** Prints the weights to a file. Do not use this while training, unless you want a 2GB size file. */
+
+	public void printWeights(BufferedWriter bw, int[] tGroup, int round, int epoch) throws IOException {
+
+		for(int l = 0; l < layers.size(); l++) {
+
+			for(int n = 0; n < layers.get(l).getNeuronCount(); n++) {
+
+				for(int w = 0; w < layers.get(l).getNeurons().get(n).getW().size(); w++) {
+					bw.write(tGroup[0]+"-"+tGroup[1]+","+round+","+epoch+","+l+","+n+",N,"+w+","+layers.get(l).getNeurons().get(n).getW().get(w)+"\n"); //"tGroup,round,epoch,layer,neuron,type,weight,value\n"
+				}
+			}
+
+			for(int w = 0; w < bias.get(l).getNeurons().get(0).getW().size(); w++) {
+				bw.write(tGroup[0]+"-"+tGroup[1]+","+round+","+epoch+","+l+","+0+",B,"+w+","+bias.get(l).getNeurons().get(0).getW().get(w)+"\n");
+			}
+		}
+	}
+
 	/** Print the output all layers. */
 
 	public void printOutput() {
-
 		Neuron z;
 
 		for(Layer l : layers) {
@@ -254,13 +261,12 @@ public class NeuralNetwork implements Serializable {
 				System.out.printf("%4.3f %4.3f\n",z.getIn(),z.getA());
 			}
 			System.out.println();
-
 		}
-
 	}
 
-	public void printLastOutput() {
+	/** Print the output of just the last layer. */
 
+	public void printLastOutput() {
 		Neuron z;
 
 		for(int n = 0; n < layers.get(layers.size()-1).getNeurons().size(); n++) {
@@ -281,11 +287,9 @@ public class NeuralNetwork implements Serializable {
 			*/
 		}
 		System.out.println();
-
 	}
 
 	public String getLastOutput() {
-
 		String s = "";
 		Neuron z;
 
@@ -298,59 +302,7 @@ public class NeuralNetwork implements Serializable {
 				s += ",";
 			}
 		}
-
 		return s;
-	}
-
-	public void printWeights(BufferedWriter bw, int[] tGroup, int round, int epoch) throws IOException {
-
-		for(int l = 0; l < layers.size(); l++) {
-
-			for(int n = 0; n < layers.get(l).getNeuronCount(); n++) {
-
-				for(int w = 0; w < layers.get(l).getNeurons().get(n).getW().size(); w++) {
-					bw.write(tGroup[0]+"-"+tGroup[1]+","+round+","+epoch+","+l+","+n+",N,"+w+","+layers.get(l).getNeurons().get(n).getW().get(w)+"\n"); //"tGroup,round,epoch,layer,neuron,type,weight,value\n"
-				}
-
-			}
-
-			for(int w = 0; w < bias.get(l).getNeurons().get(0).getW().size(); w++) {
-				bw.write(tGroup[0]+"-"+tGroup[1]+","+round+","+epoch+","+l+","+0+",B,"+w+","+bias.get(l).getNeurons().get(0).getW().get(w)+"\n");
-			}
-
-		}
-
-	}
-
-	public void loadWeights(String filename) {
-
-		try {
-
-			BufferedReader br = new BufferedReader(new FileReader(filename));
-			String[] spl;
-			String read;
-
-			int currentLayer;
-			int currentWeight;
-
-			while((read = br.readLine())!=null) {
-				spl = read.split(",");
-
-				for(int i = 0; i < spl.length; i++) {
-
-
-
-				}
-
-			}
-
-			br.close();
-
-		} catch(IOException e) {
-
-
-		}
-
 	}
 
 }

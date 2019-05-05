@@ -31,7 +31,6 @@ public class Layer implements Serializable {
  	/** Create a layer with the given number of neurons, that will have input and output weights */
 
 	public void makeLayers(int prev) {
-
 		ArrayList<Neuron> neurons = new ArrayList<>();
 		Neuron n;
 
@@ -44,11 +43,9 @@ public class Layer implements Serializable {
 			n.setA(0);
 
 			neurons.add(n);
-
 		}
 
 		this.neurons = neurons;
-
 	}
 
 }

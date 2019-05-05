@@ -39,18 +39,15 @@ public class Neuron implements Serializable {
 	/** Generate random input weights for the neuron in that layer. */
 
 	public ArrayList<Double> genWeights(int size) {
-
 		ArrayList<Double> weights = new ArrayList<>(size);
 		double w;
 
 		for(int i = 0; i < size; i++) {
 			w = new Random().nextDouble() - new Random().nextDouble();
 			weights.add(w);
-
 		}
 
 		return weights;
-
 	}
 
 }
