@@ -1,8 +1,6 @@
 
 sevenTest <- read.csv(file.choose())
-
 sevenTrain <- read.csv(file.choose())
-
 sevenWeight <- read.csv(file.choose())
 
 #########################
@@ -22,7 +20,7 @@ head(sevenWeight)
 ############
 
 valueR <- round(sevenWeight$value,digits=2)
-boxplot(valueR ~ sevenWeight$tGroup)
+boxplot(valueR ~ sevenWeight$layer)
 
 # Examine how the probability changed over epochs, for all training sets & rounds.
 
@@ -46,18 +44,42 @@ plot(probY ~ epoch, data = dataY,lwd=.5,pch = 19)
 plot(probZ ~ epoch, data = dataZ,lwd=.5,pch = 19,xlab=" ")
 #abline(lm(probZ ~ epoch, data = dataZ), col = "blue",lwd=2.5)
 
+
+#########################
+# 
+############
+
+aggW <- aggregate( .~ layer+weight,data=sevenWeight,FUN=mean)
+
+boxplot(round(value,digit=4)~layer,data=aggW,names=c("1st Hidden","2nd Hidden","Output"))
+
+hist(round(aggW$value,digit=4))
+
+#########################
+# Measure the accuracy
+############
+
+# Predicted in top side
+# Actual along left side
+
+accData(sevenTest)
+
+accData(subset(sevenTest,tGroup=="0"))
+accData(subset(sevenTest,tGroup=="1"))
+accData(subset(sevenTest,tGroup=="2"))
+
 #########################
 # Subset by training & test group
 ############
 
-# Percent correct, for each test group & all rounds.
+# Percent incorrect, for each test group & all rounds.
 
 one <- perTestCorrect(subset(sevenTest,tGroup=="0"))
 two <- perTestCorrect(subset(sevenTest,tGroup=="1"))
 three <- perTestCorrect(subset(sevenTest,tGroup=="2"))
 
 d <- data.frame(
-  truePos=c(
+  correct=c(
     one,
     two,
     three
@@ -72,15 +94,8 @@ d <- data.frame(
 
 d <- aggregate( .~ round,data=d,FUN=sum)
 
-
 par(cex.lab=1.5, cex.axis=1.5, cex.main=1.5, cex.sub=1.5)
 plot(density(d$correct/d$total),lwd=2,main=" ")
-
-#########################
-# Measure the accuracy
-############
-
-accData(sevenTest)
 
 #########################
 # Misc. functions
@@ -92,9 +107,9 @@ perTestCorrect <- function(data) {
   
   for(a in 1 : length(data[,1])) {
     if(data[a,3] == data[a,4]) {
-      correct <- c(correct,1)
-    } else {
       correct <- c(correct,0)
+    } else {
+      correct <- c(correct,1)
     }
   }
   
