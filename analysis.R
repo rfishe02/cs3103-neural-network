@@ -3,7 +3,10 @@ sevenTest <- read.csv(file.choose())
 sevenTrain <- read.csv(file.choose())
 sevenWeight <- read.csv(file.choose())
 
-subset(sevenWeight,tGroup == "0-2")
+sub <- subset(sevenWeight,tGroup == "0-2" & round == 6)
+d <- data.frame(sub$layer,sub$neuron,sub$type,sub$weight,sub$value)
+
+write.csv(d,"C:/Users/fishe/Downloads/CS3103_NN/weights.csv", row.names=FALSE)
 
 #########################
 # Summary of the data
@@ -70,9 +73,9 @@ hist(round(aggW$value,digit=4))
 
 accData(sevenTest)
 
-accData(subset(sevenTest,tGroup=="0"))
-accData(subset(sevenTest,tGroup=="1"))
-accData(subset(sevenTest,tGroup=="2"))
+accData(subset(sevenTest,tGroup=="0" & round == 9))
+accData(subset(sevenTest,tGroup=="1" & round == 9)) # 1, 2, 3, 4, 8
+accData(subset(sevenTest,tGroup=="2" & round == 6)) # 1, 6, 7
 
 #########################
 # Subset by training & test group
